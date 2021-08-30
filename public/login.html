@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta charset="utf-8">
+        <title>Login Page</title>
+        <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase-auth.js"></script>
+        <script>
+        // Initialize firebase
+        let config = {
+            apiKey: "AIzaSyDYyZZeuo_5HlgyrHrhyYZUb4n3AaERx9Q",
+            authDomain: "project-of-trihack.firebaseapp.com",
+            projectId: "project-of-trihack",
+            storageBucket: "project-of-trihack.appspot.com",
+            messagingSenderId: "559325421489",
+            appId: "1:559325421489:web:5f54444d9c28e3de08a790",
+            measurementId: "G-H2B94N0G9D"
+        };
+        try {
+            firebase.initializeApp(config);
+        } catch(e) {
+            console.log(e);
+        }
+
+        firebase.auth().onAuthStateChanged((user) => {
+            if (user) {
+                console.log('auth user', user);
+                document.querySelector('#msg').textContent = '"' +
+                    user.email + '"" logined!';
+            }
+        });
+
+        // login
+        function login(){
+            let email = document.querySelector('#email').value;
+            let password = document.querySelector('#password').value;
+            firebase.auth().signInWithEmailAndPassword(email, password)
+                .then((result) => {
+                    console.log('sign in successfully.');
+                }).catch((error) => {
+                    console.log(error.message);
+                    document.querySelector('#msg').textContent =
+                     'fail to login...';
+                });
+        }
+
+        // logout
+        function logout(){
+            firebase.auth().signOut();
+            document.getElementById('msg').textContent = 'no login...';
+        }
+    </script>
+    </head>
+    <body>
+        <h1>Login Page</h1>
+        <p id="msg">no login...</p>
+        <div id="firebaseui-auth-container"></div>
+        <table>
+            <tr><th>Email</th>
+            <td><input type="email" id="email"></td></tr>
+            <tr><th>Password</th>
+            <td><input type="password" id="password"></td></tr>
+            <tr><th></th><td>
+                <button onclick="login();">Login</button>
+                <button onclick="logout();">Logout</button>
+            </th></tr>
+        </table>
+    </body>
+</html>
