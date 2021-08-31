@@ -36,10 +36,11 @@
             let password = document.querySelector('#password').value;
             firebase.auth().createUserWithEmailAndPassword(email, password)
                 .then((userCredential) => {
-                    // Signed in
+                    // Signed up
                     var user = userCredential.user;
                     console.log('sign up successfully.');
                     firebase.auth().signOut();
+                    location.href = "./signed_up.html";
                 }).catch((error) => {
                     console.log(error.message);
                     document.querySelector('#msg').textContent =
