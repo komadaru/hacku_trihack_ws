@@ -46,7 +46,7 @@
             }
           }
           let db = firebase.firestore();
-          //存在するuidのみを抽出
+          //存在するuidがひとつでもあれば追加しない
           let col = db.collection("users")
           let promises = [];
           for (let uid of uids) {
