@@ -29,7 +29,7 @@
           let currentUser = firebase.auth().currentUser
           if (currentUser === null) {
             document.querySelector("#error-message").textContent = "ログインしていません"
-            return false;
+            return;
           }
           // uidを追加していく
           let form = document.querySelector("#form1")
@@ -74,7 +74,6 @@
               })
             }
           });
-          return false;
         }
         
         function addUidInput() {
@@ -98,7 +97,7 @@
         <p>追加するアカウントのID(UID)：</p>
         <ul class="uid-list" name="uid-list"><li><input type="text" name="adding-uid"></li></ul>
         <button type="button" onclick="addUidInput()">+別のIDを追加</button>
-        <input type="submit" onclick="return onSubmit();">
+        <input type="submit" onclick="onSubmit(); return false">
         <p id="error-message"></p>
       </form>
       <script>
