@@ -1,0 +1,35 @@
+.info p{
+  display: inline-block;
+  vertical-align: top;
+  font-size: 50px;
+}
+
+.img {
+  width: 200px;
+  height: 200px;
+}
+
+.com {
+  font-size: 40px;
+  position: relative;
+  left: 20px;
+}
+
+.mkcom {
+  display: inline-block;
+  padding: 0.5em 1em;
+  text-decoration: none;
+  background: #668ad8;
+  color: #FFF;
+  border-bottom: solid 4px #627295;
+  border-radius: 20px;
+  position: relative;
+  left: 20px;
+  font-size: 20px;
+}
+
+.mkcom:hover {
+  -webkit-transform: translateY(4px);
+  transform: translateY(4px);
+  border-bottom: none;
+}

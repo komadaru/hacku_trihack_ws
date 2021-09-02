@@ -1,0 +1,37 @@
+.sinIn {
+  display: inline-block;
+  padding: 0.5em 1em;
+  text-decoration: none;
+  background: #668ad8;
+  color: #FFF;
+  border-bottom: solid 4px #627295;
+  border-radius: 20px;
+  position: relative;
+  left: 20px;
+  font-size: 20px;
+}
+  
+.sinIn:hover {
+  -webkit-transform: translateY(4px);
+  transform: translateY(4px);
+  border-bottom: none;
+}
+
+.sinUp {
+  display: inline-block;
+  padding: 0.5em 1em;
+  text-decoration: none;
+  background: #d8d066;
+  color: #FFF;
+  border-bottom: solid 4px #959462;
+  border-radius: 20px;
+  position: relative;
+  left: 20px;
+  font-size: 20px;
+}
+  
+.sinUp:hover {
+  -webkit-transform: translateY(4px);
+  transform: translateY(4px);
+  border-bottom: none;
+}
