@@ -25,55 +25,82 @@
 
     // submit
     function onSubmit(){
+      // ログイン確認
       let currentUser = firebase.auth().currentUser
       if (currentUser === null) {
-        document.querySelector("#current-user").textContent = "ログインしていません"
-        return false;
+        document.querySelector("#error-message").textContent = "ログインしていません"
+        return;
       }
-      let comName = document.forms[0].elements["com-name"][0]
-      let emails = document.forms[0].elements["adding-email"]
-      let addingUsers = [];
-      for (let email of emails) {
-        let addingUser = firebase.auth().getUserByEmail(email)
-        if (addingUser !== null) {
-          addingUsers.push(addingUser)
+      // uidを追加していく
+      let form = document.querySelector("#form1")
+      let comName = form.elements["com-name"].value
+      let uidElements = form.elements["adding-uid"]
+      let uids = []
+      if (uidElements.length === void 0) {
+        uids.push(uidElements.value)
+      } else {
+        for (let uidElement of uidElements) {
+          if (uidElement.value !== "") {
+            uids.push(uidElement.value)
+          }
+        }
       }
-      };
-      let newCommunity = {
-        name: comName,
-        users: [currentUser] + addingUsers
-      };
       let db = firebase.firestore();
-      let col = db.collection("communities");
-      col.push(newCommunity);
-      console.log("ste")
-      return false;
+      //存在するuidがひとつでもあれば追加しない
+      let col = db.collection("users")
+      let promises = [];
+      for (let uid of uids) {
+        promises.push(col.doc(uid).get())
+      }
+      Promise.all(promises).then((values) => {
+        let allUserExists = true
+        for (let value of values) {
+          if (!value.exists) {
+            console.log(value)
+            document.querySelector("#error-message").textContent = value.id + "は存在しません。"
+            allUserExists = false
+            break
+          }
+        }
+        if (allUserExists) {
+          // Firestoreのコミュニティcollectionに追加
+          let newCommunity = {
+            name: comName,
+            users: uids.concat(currentUser.uid)
+          };
+          col = db.collection("communities");
+          col.add(newCommunity).then((docRef) => {
+            document.querySelector("#error-message").textContent = "コミュニティを作成しました id:" + docRef.id
+          })
+        }
+      });
     }
     
-    function addEmailInput() {
-      let ul = document.querySelector("ul.email-list")
+    function addUidInput() {
+      let ul = document.querySelector("ul.uid-list")
       for (let li of ul.children) {
-        console.log(li.children)
         if (li.children[0].value === "") {
           return
         }
       }
       let li = document.createElement("li")
-      li.innerHTML = "<input type='email' name='adding-email'>"
-      document.querySelector("ul.email-list").appendChild(li)
+      li.innerHTML = "<input type='text' name='adding-uid'>"
+      document.querySelector("ul.uid-list").appendChild(li)
     }
 
-    </script>
+  </script>
   </head>
   <body>
     <h1>コミュニティ作成</h1>
-    <form id="form1" action="return false">
-      <p>コミュニティの名前：<input type="text" name="com-name"></p>
-      <p>追加するアカウントのメールアドレス：</p>
-      <ul class="email-list"><li><input type="email" name="adding-email"></li></ul>
-      <button type="button" onclick="addEmailInput()">+別のアドレスを追加</button>
-      <input type="submit" onclick="return onSubmit();">
-      <p id="current-user"></p>
+    <form id="form1" action="javascript:void 0" onsubmit="onSubmit();">
+      <p>コミュニティの名前：<input type="text" name="com-name" required></p>
+      <p>追加するアカウントのID(UID)：</p>
+      <ul class="uid-list" name="uid-list"><li><input type="text" name="adding-uid"></li></ul>
+      <button type="button" onclick="addUidInput()">+別のIDを追加</button>
+      <input type="submit">
+      <p id="error-message"></p>
     </form>
+    <script>
+    </script>
   </body>
 </html>
