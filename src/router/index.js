@@ -1,18 +1,16 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Firstpage from '../views/Firstpage.vue'
 import Login from '../components/Login.vue'
 import Signup from '../components/Signup.vue'
 import Mypage from '../components/Mypage.vue'
 import Make_community from '../components/Make_community.vue'
 import Community from '../components/Community.vue'
 import Discussion from '../components/Discussion.vue'
+import Top from '../views/Top.vue'
+import Prof from '../views/Prof.vue'
+import ComList from '../views/ComList.vue'
+
 
 const routes = [
-  {
-    path: '/',
-    name: 'Firstpage',
-    component: Firstpage
-  },
   {
     path: '/login',
     name: 'Login',
@@ -42,7 +40,22 @@ const routes = [
     path: '/discussion/:did',
     name: 'Discussion',
     component: Discussion
-  }
+  },
+  {
+    path: '/',
+    name: 'Top',
+    component: Top
+  },
+  {
+    path: '/comlist',
+    name: 'ComList',
+    component: ComList
+  },
+  {
+    path: '/prof',
+    name: 'Prof',
+    component: Prof
+  },
 ]
 
 const router = createRouter({
