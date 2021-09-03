@@ -68,6 +68,7 @@ export default {
                     col = db.collection("communities");
                     col.add(newCommunity).then((docRef) => {
                         self.message = "コミュニティを作成しました id:" + docRef.id
+                        self.$router.push("/discussion/" + docRef.id)
                     })
                 }
             });
