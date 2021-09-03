@@ -8,10 +8,16 @@ service cloud.firestore {
     	return request.auth.uid == userId;
     }
     function isMember(comId) {
-    	return request.auth.uid in resource.data.members;
+    	return request.auth.uid in getMembers(comId);
+    }
+    function getMembers(comId) {
+      return get(/databases/$(database)/documents/communities/$(comId)).members
+    }
+    function getComIdByDisId(disId) {
+      return get(/databases/$(database)/documents/discussions/$(disId)).community
     }
     function isMemberOfCommunityWhichHas(disId){
-      return request.auth.uid in get(/databases/$(database)/documents/communities/$(resource.data.community))
+      return request.auth.uid in getMembers(getComIdByDisId(disId))
     }
     function isParticipant(disId) {
       return request.auth.uid in resource.data.participants
@@ -26,8 +32,9 @@ service cloud.firestore {
       allow update: if isMember(comId);
     }
     match /discussions/{disId} {
-      allow create, read: if isMemberOfCommunityWhichHas(disId)
-      allow update: if isParticipant(comId)
+      allow create: if isMember(request.resource.data.community)
+      allow read: if isMemberOfCommunityWhichHas(disId)
+      allow update: if isParticipant(disId)
     }
   }
 }
