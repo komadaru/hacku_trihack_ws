@@ -1,10 +1,10 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Login from '../components/Login.vue'
-import Signup from '../components/Signup.vue'
-import Mypage from '../components/Mypage.vue'
-import Make_community from '../components/Make_community.vue'
-import Community from '../components/Community.vue'
-import Discussion from '../components/Discussion.vue'
+import Login from '../views/Login.vue'
+import Signup from '../views/Signup.vue'
+import Make_community from '../views/Make_community.vue'
+import User from '../views/User.vue'
+import Community from '../views/Community.vue'
+import Discussion from '../views/Discussion.vue'
 import Top from '../views/Top.vue'
 import Prof from '../views/Prof.vue'
 import ComList from '../views/ComList.vue'
@@ -24,7 +24,12 @@ const routes = [
   {
     path: '/mypage',
     name: 'Mypage',
-    component: Mypage
+    component: User
+  },
+  {
+    path: '/user',
+    name: 'User',
+    component: User
   },
   {
     path: '/make_community',
