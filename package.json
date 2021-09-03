@@ -11,6 +11,9 @@
     "core-js": "^3.6.5",
     "firebase": "^8.10.0",
     "vue": "^3.0.0",
+    "vue-ctk-date-time-picker": "^2.5.0",
+    "vue-flatpickr-component": "^9.0.5",
+    "vue-number-input-spinner": "^2.2.0",
     "vue-router": "^4.0.0-0",
     "vuex": "^4.0.0-0"
   },

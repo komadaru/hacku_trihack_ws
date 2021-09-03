@@ -4,15 +4,15 @@ import Signup from '../views/Signup.vue'
 import Make_community from '../views/Make_community.vue'
 import User from '../views/User.vue'
 import Community from '../views/Community.vue'
+import Make_discussion from '../views/Make_discussion.vue'
 import Discussion from '../views/Discussion.vue'
-import Top from '../views/Top.vue'
 import Prof from '../views/Prof.vue'
 import ComList from '../views/ComList.vue'
 
 
 const routes = [
   {
-    path: '/login',
+    path: '/',
     name: 'Login',
     component: Login
   },
@@ -42,14 +42,14 @@ const routes = [
     component: Community
   },
   {
+    path: '/make_discussion',
+    name: 'Make_discussion',
+    component: Make_discussion
+  },
+  {
     path: '/discussion/:did',
     name: 'Discussion',
     component: Discussion
-  },
-  {
-    path: '/',
-    name: 'Top',
-    component: Top
   },
   {
     path: '/comlist',
