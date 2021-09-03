@@ -10,6 +10,12 @@ service cloud.firestore {
     function isMember(comId) {
     	return request.auth.uid in resource.data.members;
     }
+    function isMemberOfCommunityWhichHas(disId){
+      return request.auth.uid in get(/databases/$(database)/documents/communities/$(resource.data.community))
+    }
+    function isParticipant(disId) {
+      return request.auth.uid in resource.data.participants
+    }
     
     match /users/{userId} {
       allow create, read: if isAuthenticated();
@@ -18,6 +24,10 @@ service cloud.firestore {
     match /communities/{comId} {
     	allow create, read: if isAuthenticated();
       allow update: if isMember(comId);
+    }
+    match /discussion/{disId} {
+      allow create, read: if isMemberOfCommunityWhichHas(disId)
+      allow update: if isParticipant(comId)
     }
   }
 }
