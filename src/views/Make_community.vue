@@ -28,7 +28,7 @@ export default {
             comName: "",
             description: "",
             addingUids: [""],
-            message: ""
+            message: "",
         }
     },
     methods: {
@@ -71,7 +71,14 @@ export default {
                     })
                 }
             });
-        },
+        }
+    },
+    created() {
+        //デバッグ用
+        firebase.auth().signInWithEmailAndPassword(
+            "example@example.com", "example")
+            .then(value => console.log("（デバッグ）ログインしました:" + value))
+            .catch(e => console.error("（デバッグ）ログインに失敗しました:" + e))
     }
 }
 </script>
