@@ -1,9 +1,7 @@
 <template>
     <ul>
         <li v-for="(post, index) in posts" :key="index">
-            <Post :n="index + 1" :time="post.time" :id="post.id" 
-                :commenter="post.commenter" :comment="post.comment"
-                :replys="post.replys"
+            <Post :n="index + 1" :post="post"
                 :getPostPathById="getPostPathById">
             </Post>
         </li>
@@ -15,7 +13,7 @@ import Post from './Post.vue'
 
 export default {
     props: {
-        posts: Object
+        posts: Array
     },
     components: {
         Post

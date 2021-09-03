@@ -1,24 +1,22 @@
 <template>
     <div class="post">
         <p><span v-if="isReply">Re:</span>
-        {{ n }} {{ commenter }} {{ format(time) }}
+        {{ n }} {{ post.commenter }} {{ format(post.time) }}
         <a href="javascript:void 0" @click="switchForm" class="reply">返信</a>
         </p>
-        <p>{{ comment }}</p>
+        <p>{{ post.content }}</p>
         <p v-if="hasReply()">
             <a href="javascript:void 0" @click="switchReply">{{ switchingMessage(replys.length) }}</a>
         </p>
     </div>
     <Form v-if="showsForm" :isReply="true"
-        :destNum="this.getPostPathById(id)" :parentId="id" @deleted="switchForm"></Form>
+        :destNum="getPostPathById(post.id)" :parentId="post.id" @deleted="switchForm"></Form>
     <!--返信を再帰的に呼び出し-->
     <transition @before-enter="beforeEnter" @enter="enter" @after-enter="afterEnter"
      @before-leave="beforeLeave" @leave="leave" @after-leave="afterLeave">
     <ul class="replys" v-if="showsReply">
-        <li v-for="(post, index) in replys" :key="index">
-            <Post :n="index + 1" :time="post.time" :id="post.id"
-                :commenter="post.commenter" :comment="post.comment"
-                :replys="post.replys" :isReply="true"
+        <li v-for="(rPost, index) in post.replys" :key="index">
+            <Post :n="index + 1" :post="rPost" :isReply="true"
                 :getPostPathById="getPostPathById">
             </Post>
         </li>
@@ -32,18 +30,13 @@ const moment = require("moment")
 export default {
     props: {
         n: Number,
-        commenter: String,
-        time: Date,
-        id: String,
-        comment: String,
-        replys: Array,
+        post: Object,
         isReply: Boolean,
         getPostPathById: Function
     },
     components: {
         Form
     },
-    emits: ["replyLinkClicked"],
     data(){
         return{
             posts: {},
@@ -56,7 +49,7 @@ export default {
             return moment(time).format("YYYY-MM-DD HH:mm:ss");
         },
         hasReply() {
-            return this.replys.length != 0;
+            return this.post.replys.length != 0;
         },
         switchReply() {
             this.showsReply = !this.showsReply;
