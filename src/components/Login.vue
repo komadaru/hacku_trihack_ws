@@ -1,16 +1,16 @@
 <template>
     <head>
-        <title>Signup Page</title>
+        <title>Login Page</title>
     </head>
     <body>
-        <h1>Signup Page</h1>
+        <h1>Login Page</h1>
     <table>
         <tr><th>Email</th>
         <td><input type="email" v-model="email"></td></tr>
         <tr><th>Password</th>
         <td><input type="password" v-model="password"></td></tr>
         <tr><th></th><td>
-            <button @click="signup">Sign up</button>
+            <button @click="login">Login</button>
         </td></tr>
     </table>
     </body>
@@ -20,7 +20,7 @@
 import firebase from "firebase";
 
 export default {
-    name: 'Signup',
+    name: 'Login',
     data: function() {
         return {
             email: '',
@@ -28,15 +28,17 @@ export default {
         }
     },
     methods: {
-        signup: function() {
-            firebase.auth().createUserWithEmailAndPassword(this.email, this.password)
-                .then(user => {
-                    alert('Create accout: ', user.email)
+        login: function() {
+            firebase.auth().signInWithEmailAndPassword(this.email, this.password).then(
+                // eslint-disable-next-line no-unused-vars
+                user => {
+                    alert('Success!')
                     this.$router.push('/')
-                })
-                .catch(error => {
-                    alert(error.message)
-                })
+                },
+                err => {
+                    alert(err.message)
+                }
+            )
         }
     }
 }
