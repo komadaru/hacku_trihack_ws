@@ -9,9 +9,9 @@
                 <input type="text" v-model="addingUids[index]">
             </li>
         </ul>
-        <p>※IDを入力しなかった場合、一人だけのコミュニティを作成できます。</p>
         <button type="button" @click="addUidInput">+別のIDを追加</button>
         <input type="submit">
+        <p>※IDを入力しなかった場合、一人だけのコミュニティを作成できます。</p>
         <p>{{ message }}</p>
     </form>
 </template>
