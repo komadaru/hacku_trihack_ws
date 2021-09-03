@@ -2,13 +2,14 @@
     <div class="post">
         <p><span v-if="isReply">Re:</span>
         {{ n }} {{ commenter }} {{ format(time) }}
-        <a href="#form" @click="setId(id, getPostPathById(id))" class="reply">返信</a>
+        <a href="javascript:void 0" @click="switchForm" class="reply">返信</a>
         </p>
         <p>{{ comment }}</p>
         <p v-if="hasReply()">
             <a href="javascript:void 0" @click="switchReply">{{ switchingMessage(replys.length) }}</a>
         </p>
     </div>
+    <Form v-if="showsForm" :isReply="true"></Form>
     <!--返信を再帰的に呼び出し-->
     <transition @before-enter="beforeEnter" @enter="enter" @after-enter="afterEnter"
      @before-leave="beforeLeave" @leave="leave" @after-leave="afterLeave">
@@ -24,6 +25,7 @@
 </template>
 
 <script>
+import Form from "./Form.vue"
 const moment = require("moment")
 
 export default {
@@ -38,11 +40,15 @@ export default {
         setId: Function,
         getPostPathById: Function
     },
+    components: {
+        Form
+    },
     emits: ["replyLinkClicked"],
     data(){
         return{
             posts: {},
             showsReply: true,
+            showsForm: false
         }
     },
     methods: {
@@ -60,6 +66,9 @@ export default {
                 return "▲返信(" + nReplys +")を非表示"
             }
             return "▼返信(" + nReplys + ")を表示"
+        },
+        switchForm() {
+            this.showsForm = !this.showsForm
         },
         beforeEnter(el) {
             el.style.height = '0';
