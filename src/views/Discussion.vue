@@ -53,7 +53,10 @@ export default {
       let postsRef = disRef.collection("posts")
       postsRef.get().then((snapshot) => {
         let posts = snapshot.docs.map(doc => {return doc.data()})
-        for (let post of posts) {post.replys = [];} //返信の配列作成
+        for (let post of posts) {
+          post.replys = []; //返信の配列作成
+          post.time = post.time.toDate(); //日付をDate型に変更
+        }
         this.posts = this.sortByTime(this.makeTree(posts));
       })
     },
