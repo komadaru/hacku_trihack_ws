@@ -1,6 +1,11 @@
 <template>
 <div id="container">
   <h1>議題：{{ name }}</h1>
+  <p class="d-data">タイプ:{{ type }} 
+    <span v-if="tags.length">タグ:
+      <span v-for="tag in tags" :key="tag">{{tag}}</span>
+    </span> 
+    状態:<span v-if="closed">閉じられました</span></p>
   <Board ref="board" :posts="posts"></Board>
   <Form ref="form" @onPosted="this.$refs.board.loadPosts()"></Form>
 </div>
@@ -26,23 +31,23 @@ export default {
       description: "",
       tags: [],
       closed: false,
-      posts: []
+      posts: [],
+      type: ""
     }
   },
   methods: {
     loadPosts() {
       let posts = [];
       let db = firebase.firestore();
-      let ref = db.collection("discussions").doc(this.$route.params.id)
-      ref.get().then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-          // doc.data() is never undefined for query doc snapshots
-          let data = doc.data();
-          data.time = data.time.toDate();
-          data.id = doc.id;
-          data.replys = [];
-          posts.push(data);
-        });
+      let ref = db.collection("discussions").doc(this.$route.params.did);
+      ref.get().then((doc) => {
+        let data = doc.data()
+        console.log(data)
+        this.name = data.name
+        this.closed = data.closed
+        if (data.tags !== void 0) {this.tags = data.tags}
+        this.description = data.description
+        this.type = data.type
         this.posts = this.sortByTime(this.makeTree(posts));
     });
   },
@@ -120,13 +125,17 @@ export default {
   },
   created() {
     //デバッグ
+    let self = this
     firebase.auth().signInWithEmailAndPassword(
       "example@example.com", "example")
-    .then(console.log("ログイン成功"))
+    .then((v) => {
+      console.log("ログイン成功 uid:" + v.user.uid)
+      console.log("コメントを初期化しています");
+      self.loadPosts();
+    })
     .catch(e => console.error("ログイン失敗" + e))
     //ここまでデバッグ
-    console.log("コメントを初期化しています");
-    this.loadPosts();
+
   }
 }
 </script>
