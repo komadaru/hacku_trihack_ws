@@ -8,7 +8,7 @@ import Discussion from '../components/Discussion.vue'
 import Top from '../views/Top.vue'
 import Prof from '../views/Prof.vue'
 import ComList from '../views/ComList.vue'
-import FirstPage from '../views/FirstPage.vue'
+import Firstpage from '../views/Firstpage.vue'
 
 
 const routes = [
@@ -59,8 +59,8 @@ const routes = [
   },
   {
     path: '/firstpage',
-    name: 'FirstPage',
-    component: FirstPage
+    name: 'Firstpage',
+    component: Firstpage
   },
 ]
 
