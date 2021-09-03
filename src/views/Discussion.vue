@@ -51,9 +51,10 @@ export default {
       });
       // 投稿を全て取得
       let postsRef = disRef.collection("posts")
-      postsRef.get().then((doc) => {
-        console.log(doc)
-        this.posts = this.sortByTime(this.makeTree(doc));
+      postsRef.get().then((snapshot) => {
+        let posts = snapshot.docs.map(doc => {return doc.data()})
+        console.log(posts)
+        this.posts = this.sortByTime(this.makeTree(posts));
       })
   },
   makeTree(posts) {
