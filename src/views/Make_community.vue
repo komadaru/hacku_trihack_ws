@@ -39,12 +39,6 @@ export default {
         },
         onSubmit(){
             const self = this
-            // ログイン確認
-            let currentUser = firebase.auth().currentUser
-            if (currentUser === null) {
-                self.message = "ログインしていません"
-                return;
-            }
             let db = firebase.firestore();
             let col = db.collection("users")
             /* 入力されたuidをdbから探すpromiseを全て発行
@@ -63,6 +57,7 @@ export default {
                     }
                 }
                 if (allUserExists) {
+                    let currentUser = firebase.auth().currentUser
                     // Firestoreのコミュニティcollectionに追加
                     let newCommunity = {
                         name: self.comName,
