@@ -11,10 +11,10 @@ service cloud.firestore {
     	return request.auth.uid in getMembers(comId);
     }
     function getMembers(comId) {
-      return get(/databases/$(database)/documents/communities/$(comId)).members
+      return get(/databases/$(database)/documents/communities/$(comId)).data.members
     }
     function getComIdByDisId(disId) {
-      return get(/databases/$(database)/documents/discussions/$(disId)).community
+      return get(/databases/$(database)/documents/discussions/$(disId)).data.community
     }
     function isMemberOfCommunityWhichHas(disId){
       return request.auth.uid in getMembers(getComIdByDisId(disId))
