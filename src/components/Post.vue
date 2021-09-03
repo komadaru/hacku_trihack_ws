@@ -9,7 +9,8 @@
             <a href="javascript:void 0" @click="switchReply">{{ switchingMessage(replys.length) }}</a>
         </p>
     </div>
-    <Form v-if="showsForm" :isReply="true"></Form>
+    <Form v-if="showsForm" :isReply="true"
+        :destNum="this.getPostPathById(id)" :parentId="id" @deleted="switchForm"></Form>
     <!--返信を再帰的に呼び出し-->
     <transition @before-enter="beforeEnter" @enter="enter" @after-enter="afterEnter"
      @before-leave="beforeLeave" @leave="leave" @after-leave="afterLeave">
@@ -18,7 +19,7 @@
             <Post :n="index + 1" :time="post.time" :id="post.id"
                 :commenter="post.commenter" :comment="post.comment"
                 :replys="post.replys" :isReply="true"
-                :setId="setId" :getPostPathById="getPostPathById">
+                :getPostPathById="getPostPathById">
             </Post>
         </li>
     </ul></transition>
@@ -37,7 +38,6 @@ export default {
         comment: String,
         replys: Array,
         isReply: Boolean,
-        setId: Function,
         getPostPathById: Function
     },
     components: {

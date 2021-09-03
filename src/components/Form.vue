@@ -14,14 +14,14 @@ import "firebase/firestore";
 
 export default {
     props: {
+        isReply: Boolean,
+        destNum: Number,
+        parentId: String
     },
     data(){
         return{
             commenter: "",
             content: "",
-            parentId: void 0,
-            isReply: false,
-            destNum: 0
         }
     },
     methods: {
@@ -47,15 +47,8 @@ export default {
                 console.error("コメントの送信に失敗しました", e)
             })
         },
-        setId(id, destNum) {
-            console.log(destNum + "(id:" + id + ")に返信");
-            this.parentId = id;
-            this.destNum = destNum
-            this.isReply = true;
-        },
         cancelReplying() {
-            this.parentId = void 0;
-            this.isReply = false;
+            this.$emit("deleted")
         }
     }
 }
