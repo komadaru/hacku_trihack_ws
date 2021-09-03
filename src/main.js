@@ -7,6 +7,9 @@ import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
 
+import "bootstrap";
+import "bootstrap/dist/css/bootstrap.min.css"
+
 // Initialize firebase
 let config = {
     apiKey: "AIzaSyDYyZZeuo_5HlgyrHrhyYZUb4n3AaERx9Q",
