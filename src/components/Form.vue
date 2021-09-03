@@ -32,9 +32,20 @@ export default {
                 "time": firebase.firestore.Timestamp.now(),
                 "parentId": this.parentId
                 }
-            this.$emit("onSubmit", post);
+            this.postComment(post);
             this.content = "";
             this.cancelReplying();
+        },
+        postComment(postData) {
+            let db = firebase.firestore();
+            let col = db.collection("comments");
+            col.add(postData)
+            .then((docRef) => {
+                console.log("コメントを送信しました", docRef.id)
+            })
+            .catch((e) => {
+                console.error("コメントの送信に失敗しました", e)
+            })
         },
         setId(id, destNum) {
             console.log(destNum + "(id:" + id + ")に返信");

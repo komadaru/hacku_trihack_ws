@@ -131,17 +131,6 @@ export default {
       }
       return null;
     },
-    postComment(postData) {
-      let db = firebase.firestore();
-      let col = db.collection("comments");
-      col.add(postData)
-      .then((docRef) => {
-        console.log("コメントを送信しました", docRef.id)
-      })
-      .catch((e) => {
-        console.error("コメントの送信に失敗しました", e)
-      })
-    }
   },
   created() {
     //デバッグ
