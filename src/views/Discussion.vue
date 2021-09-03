@@ -33,8 +33,8 @@ export default {
     loadPosts() {
       let posts = [];
       let db = firebase.firestore();
-      let col = db.collection("comments")
-      col.get().then((querySnapshot) => {
+      let ref = db.collection("discussions").doc(this.$route.params.id)
+      ref.get().then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
           // doc.data() is never undefined for query doc snapshots
           let data = doc.data();
