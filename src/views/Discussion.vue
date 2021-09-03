@@ -7,7 +7,7 @@
     </span> 
     状態:<span v-if="closed">閉じられました</span></p>
   <Board ref="board" :posts="posts"></Board>
-  <Form ref="form" @onSubmit="postComment"></Form>
+  <Form ref="form"></Form>
 </div>
 </template>
 
