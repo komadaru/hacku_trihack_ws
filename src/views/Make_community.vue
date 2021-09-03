@@ -67,7 +67,8 @@ export default {
                     let newCommunity = {
                         name: self.comName,
                         description: self.description,
-                        users: self.addingUids.concat(currentUser.uid)
+                        users: self.addingUids.concat(currentUser.uid),
+                        discussions: []
                     };
                     col = db.collection("communities");
                     col.add(newCommunity).then((docRef) => {
