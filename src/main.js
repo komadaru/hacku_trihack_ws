@@ -3,6 +3,10 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 
+// Inport outside library
+import "flatpickr";
+import "flatpickr/dist/flatpickr.css";
+
 import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
