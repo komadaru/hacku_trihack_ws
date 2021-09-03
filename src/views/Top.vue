@@ -1,8 +1,10 @@
 <template>
   <div class="button">
-    <router-link :to="{ path: '/prof'}">
-      <v-btn color=#2196F3 elevation="2">サインイン</v-btn>
+    <router-link :to="{ path: '/firstpage'}">
+      <button type="button" class="btn btn-primary">サインイン</button>
     </router-link>
-    <v-btn color=#64FFDA elevation="2">サインアップ</v-btn>
+    <router-link :to="{ path: '/firstpage'}">
+    <button type="button" class="btn btn-success">サインアップ</button>
+    </router-link>
   </div>
 </template>
