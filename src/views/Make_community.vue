@@ -45,7 +45,9 @@ export default {
             存在しないuidがひとつでもあれば追加しない*/
             let promises = [];
             for (let addingUid of self.addingUids) {
-                promises.push(col.doc(addingUid).get())
+                if (addingUid !== "") {
+                    promises.push(col.doc(addingUid).get())
+                }
             }
             Promise.all(promises).then((values) => {
                 let allUserExists = true
