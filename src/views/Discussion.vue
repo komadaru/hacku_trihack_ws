@@ -36,11 +36,11 @@ export default {
     }
   },
   methods: {
-    loadPosts() {
-      let posts = [];
+    loadDiscuss() {
       let db = firebase.firestore();
-      let ref = db.collection("discussions").doc(this.$route.params.did);
-      ref.get().then((doc) => {
+      // 議論の情報を取得
+      let disRef = db.collection("discussions").doc(this.$route.params.did);
+      disRef.get().then((doc) => {
         let data = doc.data()
         console.log(data)
         this.name = data.name
@@ -48,8 +48,13 @@ export default {
         if (data.tags !== void 0) {this.tags = data.tags}
         this.description = data.description
         this.type = data.type
-        this.posts = this.sortByTime(this.makeTree(posts));
-    });
+      });
+      // 投稿を全て取得
+      let postsRef = disRef.collection("posts")
+      postsRef.get().then((doc) => {
+        console.log(doc)
+        this.posts = this.sortByTime(this.makeTree(doc));
+      })
   },
   makeTree(posts) {
     for (let post of posts){
@@ -131,7 +136,7 @@ export default {
     .then((v) => {
       console.log("ログイン成功 uid:" + v.user.uid)
       console.log("コメントを初期化しています");
-      self.loadPosts();
+      self.loadDiscuss();
     })
     .catch(e => console.error("ログイン失敗" + e))
     //ここまでデバッグ
