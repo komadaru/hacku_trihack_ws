@@ -1,7 +1,7 @@
 <template>
     <form id="form" @submit.prevent="onSubmit">
         <p><span v-if="isReply()">返信先：{{ destPath }} 
-            <button type="button" @click="cancelReplying" onclick="return false">返信をキャンセル</button></span>
+            <button type="button" @click="deleteForm" onclick="return false">返信をキャンセル</button></span>
          名前：<input type="text" v-model="commenter" required></p>
         <p>コメント：<textarea v-model="content" cols="70" rows="14" required></textarea></p>
         <input type="submit">
@@ -33,8 +33,8 @@ export default {
                 "parentId": this.destId
                 }
             this.postComment(post);
-            this.content = "";
-            this.cancelReplying();
+            this.clear();
+            if (this.isReply()) {this.deleteForm();}
         },
         postComment(postData) {
             let db = firebase.firestore();
@@ -51,7 +51,11 @@ export default {
         isReply(){
             return this.destId !== void 0;
         },
-        cancelReplying() {
+        clear() {
+            this.commenter = "";
+            this.content = "";
+        },
+        deleteForm() {
             this.$emit("deleted")
         }
     }
