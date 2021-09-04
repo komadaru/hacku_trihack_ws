@@ -15,7 +15,8 @@ import "firebase/firestore";
 export default {
     props: {
         destPath: String,
-        destId: String
+        destId: String,
+        disId: String
     },
     data(){
         return{
@@ -37,7 +38,8 @@ export default {
         },
         postComment(postData) {
             let db = firebase.firestore();
-            let col = db.collection("comments");
+            let col = db.collection("discussions").doc(this.disId)
+                .collection("posts");
             col.add(postData)
             .then((docRef) => {
                 console.log("コメントを送信しました", docRef.id)

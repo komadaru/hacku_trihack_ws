@@ -9,13 +9,14 @@
             <a href="javascript:void 0" @click="switchReply">{{ switchingMessage() }}</a>
         </p>
     </div>
-    <Form v-if="showsForm" :destPath="getPostPathById(post.id)" :destId="post.id" @deleted="switchForm"></Form>
+    <Form v-if="showsForm" :destPath="getPostPathById(post.id)"
+     :disId="disId" :destId="post.id" @deleted="switchForm"></Form>
     <!--返信を再帰的に呼び出し-->
     <transition @before-enter="beforeEnter" @enter="enter" @after-enter="afterEnter"
      @before-leave="beforeLeave" @leave="leave" @after-leave="afterLeave">
     <ul class="replys" v-if="showsReply">
         <li v-for="(rPost, index) in post.replys" :key="index">
-            <Post :n="index + 1" :post="rPost"
+            <Post :n="index + 1" :post="rPost" :disId ="disId"
                 :getPostPathById="getPostPathById">
             </Post>
         </li>
@@ -29,6 +30,7 @@ const moment = require("moment")
 export default {
     props: {
         n: Number,
+        disId: String,
         post: Object,
         getPostPathById: Function
     },

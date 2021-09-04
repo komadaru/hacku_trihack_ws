@@ -7,8 +7,8 @@
     </span> 
     状態:<span v-if="closed">閉じられました</span></p>
   <p>{{ description }}</p>
-  <Board ref="board" :posts="posts"></Board>
-  <Form ref="form"></Form>
+  <Board ref="board" :posts="posts" :disId="disId"></Board>
+  <Form ref="form" :disId="disId"></Form>
 </div>
 </template>
 
@@ -27,6 +27,7 @@ export default {
   },
   data() {
     return {
+      disId: "",
       name: "",
       description: "",
       tags: [],
@@ -42,6 +43,7 @@ export default {
       let disRef = db.collection("discussions").doc(this.$route.params.did);
       disRef.get().then((doc) => {
         let data = doc.data()
+        this.disId = doc.id
         this.name = data.name
         this.closed = data.closed
         if (data.tags !== void 0) {this.tags = data.tags}
