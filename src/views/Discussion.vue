@@ -7,7 +7,7 @@
     </span> 
     状態:<span v-if="closed">閉じられました</span></p>
   <p>{{ description }}</p>
-  <Board ref="board" :posts="posts" :disId="disId"></Board>
+  <Board ref="board" :disId="disId"></Board>
   <Form ref="form" :disId="disId"></Form>
 </div>
 </template>
@@ -27,12 +27,11 @@ export default {
   },
   data() {
     return {
-      disId: "",
+      disId: this.$route.params.did,
       name: "",
       description: "",
       tags: [],
       closed: false,
-      posts: [],
       type: ""
     }
   },
@@ -40,54 +39,15 @@ export default {
     loadDiscuss() {
       let db = firebase.firestore();
       // 議論の情報を取得
-      let disRef = db.collection("discussions").doc(this.$route.params.did);
+      let disRef = db.collection("discussions").doc(this.disId);
       disRef.get().then((doc) => {
         let data = doc.data()
-        this.disId = doc.id
         this.name = data.name
         this.closed = data.closed
         if (data.tags !== void 0) {this.tags = data.tags}
         this.description = data.description
         this.type = data.type
       });
-      // 投稿を全て取得
-      let postsRef = disRef.collection("posts")
-      let posts = [];
-      postsRef.get().then((snapshot) => {
-        for (let doc of snapshot.docs) {
-          let post = doc.data();
-          post.id = doc.id; //idをセット
-          post.replys = []; //返信の配列作成
-          post.time = post.time.toDate(); //日付をDate型に変更
-          posts.push(post)
-        }
-        console.log(posts)
-        this.posts = this.sortByTime(this.makeTree(posts));
-      })
-    },
-    makeTree(posts) {
-      for (let post of posts){
-        if (typeof post.parentId !== "undefined") {
-          post.parent = posts.find((p) => {
-            return p.id == post.parentId;
-          });
-          post.parent.replys.push(post);
-        }
-      }
-      posts = posts.filter((post) => {
-        return typeof post.parentId === "undefined"
-      })
-      return posts
-    },
-    sortByTime(tree) {
-      let self = this
-      tree.sort((a, b) => a.time - b.time);
-      for (let node of tree) {
-        if (node.replys.length != 0){
-          self.sortByTime(node.replys)
-        }
-      }
-      return tree;
     }
   },
   created() {
