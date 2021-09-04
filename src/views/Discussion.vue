@@ -9,7 +9,7 @@
     状態:<span v-if="closed">閉じられました</span></p>
   <p>{{ description }}</p>
   <Board ref="board" :disId="disId"></Board>
-  <Form ref="form" :disId="disId"></Form>
+  <PostForm ref="form" :disId="disId"></PostForm>
   </div>
   <p class="invalid-message" v-else>議論 (id:{{ disId }})は存在しないか、閲覧する権限がありません。</p>
 </div>
@@ -20,13 +20,13 @@ import firebase from "firebase/app"
 import "firebase/firestore"
 import "firebase/auth"
 import Board from "../components/Board.vue"
-import Form from '../components/Form.vue'
+import PostForm from '../components/PostForm.vue'
 
 export default {
   name: 'Discussion',
   components: {
     Board,
-    Form
+    PostForm
   },
   data() {
     return {

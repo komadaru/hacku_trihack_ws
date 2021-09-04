@@ -9,9 +9,9 @@
             <a href="javascript:void 0" @click="switchReply">{{ switchingMessage() }}</a>
         </p>
     </div>
-    <Form v-if="showsForm" :destPath="path"
+    <PostForm v-if="showsForm" :destPath="path"
      :disId="disId" :destId="post.id" @deleted="switchForm"
-     @onSubmit="$emit('onFormSubmit')"></Form>
+     @onSubmit="$emit('onFormSubmit')"></PostForm>
     <!--返信を再帰的に呼び出し-->
     <transition @before-enter="beforeEnter" @enter="enter" @after-enter="afterEnter"
      @before-leave="beforeLeave" @leave="leave" @after-leave="afterLeave">
@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import Form from "./Form.vue"
+import PostForm from "./PostForm.vue"
 const moment = require("moment")
 
 export default {
@@ -38,7 +38,7 @@ export default {
     },
     emits: ["onFormSubmit"],
     components: {
-        Form
+        PostForm
     },
     data(){
         return{
