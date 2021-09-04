@@ -2,7 +2,8 @@
     <ul>
         <li v-for="(post, index) in posts" :key="index">
             <Post :n="index + 1" :post="post" :disId="disId"
-                :getPostPathById="getPostPathById">
+                :getPostPathById="getPostPathById"
+                @onFormSubmit="loadPosts">
             </Post>
         </li>
     </ul>

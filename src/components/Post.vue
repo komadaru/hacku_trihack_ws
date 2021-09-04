@@ -10,14 +10,16 @@
         </p>
     </div>
     <Form v-if="showsForm" :destPath="getPostPathById(post.id)"
-     :disId="disId" :destId="post.id" @deleted="switchForm"></Form>
+     :disId="disId" :destId="post.id" @deleted="switchForm"
+     @onSubmit="$emit('onFormSubmit')"></Form>
     <!--返信を再帰的に呼び出し-->
     <transition @before-enter="beforeEnter" @enter="enter" @after-enter="afterEnter"
      @before-leave="beforeLeave" @leave="leave" @after-leave="afterLeave">
     <ul class="replys" v-if="showsReply">
         <li v-for="(rPost, index) in post.replys" :key="index">
             <Post :n="index + 1" :post="rPost" :disId ="disId"
-                :getPostPathById="getPostPathById">
+                :getPostPathById="getPostPathById"
+                @onFormSubmit="$emit('onFormSubmit')">
             </Post>
         </li>
     </ul></transition>
@@ -34,6 +36,7 @@ export default {
         post: Object,
         getPostPathById: Function
     },
+    emits: ["onFormSubmit"],
     components: {
         Form
     },

@@ -33,6 +33,7 @@ export default {
                 "parentId": this.destId
                 }
             this.postComment(post);
+            this.$emit("onSubmit")
             this.clear();
             if (this.isReply()) {this.deleteForm();}
         },
