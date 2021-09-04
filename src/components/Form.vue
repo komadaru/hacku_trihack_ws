@@ -54,9 +54,6 @@ export default {
         cancelReplying() {
             this.$emit("deleted")
         }
-    },
-    created() {
-        console.log(this.destId)
     }
 }
 </script>
