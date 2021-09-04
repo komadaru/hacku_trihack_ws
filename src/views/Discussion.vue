@@ -1,5 +1,6 @@
 <template>
 <div id="container">
+  <div id="main" v-if="isValid">
   <h1>議題：{{ name }}</h1>
   <p class="d-data">タイプ:{{ type }} 
     <span v-if="tags.length">タグ:
@@ -9,6 +10,8 @@
   <p>{{ description }}</p>
   <Board ref="board" :disId="disId"></Board>
   <Form ref="form" :disId="disId"></Form>
+  </div>
+  <p class="invalid-message" v-else>議論 (id:{{ disId }})は存在しないか、閲覧する権限がありません。</p>
 </div>
 </template>
 
@@ -32,7 +35,8 @@ export default {
       description: "",
       tags: [],
       closed: false,
-      type: ""
+      type: "",
+      isValid: true
     }
   },
   methods: {
@@ -47,7 +51,7 @@ export default {
         if (data.tags !== void 0) {this.tags = data.tags}
         this.description = data.description
         this.type = data.type
-      });
+      }).catch(() =>{this.isValid = false});
     }
   },
   created() {

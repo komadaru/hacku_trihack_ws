@@ -43,7 +43,7 @@ export default {
                 }
                 console.log(posts)
                 this.posts = this.sortByTime(this.makeTree(posts));
-            })
+            }).catch(e => console.error(e))
         },
         makeTree(posts) {
             for (let post of posts){
