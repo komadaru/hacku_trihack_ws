@@ -19,4 +19,5 @@ let config = {
 };
 firebase.initializeApp(config);
 
+firebase.firestore().settings({ignoreUndefinedProperties:true})
 createApp(App).use(store).use(router).mount('#app')
