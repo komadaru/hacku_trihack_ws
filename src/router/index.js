@@ -38,7 +38,7 @@ const routes = [
     component: Make_community
   },
   {
-    path: '/community/:cid',
+    path: '/community',
     name: 'Community',
     component: Community
   },

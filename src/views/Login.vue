@@ -1,3 +1,5 @@
+import firebase from "firebase/app"
+
 <template>
     <head>
         <title>Login Page</title>
