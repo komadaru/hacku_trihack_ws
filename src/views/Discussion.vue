@@ -42,7 +42,6 @@ export default {
       let disRef = db.collection("discussions").doc(this.$route.params.did);
       disRef.get().then((doc) => {
         let data = doc.data()
-        console.log(data)
         this.name = data.name
         this.closed = data.closed
         if (data.tags !== void 0) {this.tags = data.tags}
@@ -51,12 +50,16 @@ export default {
       });
       // 投稿を全て取得
       let postsRef = disRef.collection("posts")
+      let posts = [];
       postsRef.get().then((snapshot) => {
-        let posts = snapshot.docs.map(doc => {return doc.data()})
-        for (let post of posts) {
+        for (let doc of snapshot.docs) {
+          let post = doc.data();
+          post.id = doc.id; //idをセット
           post.replys = []; //返信の配列作成
           post.time = post.time.toDate(); //日付をDate型に変更
+          posts.push(post)
         }
+        console.log(posts)
         this.posts = this.sortByTime(this.makeTree(posts));
       })
     },
