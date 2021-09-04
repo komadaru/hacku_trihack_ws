@@ -39,12 +39,9 @@ service cloud.firestore {
     }
     match /discussions/{disId} {
       allow create: if isMember(request.resource.data.community)
-      allow read: if isMemberOfCommunityWhichHas(disId)
-      allow update: if isParticipant(disId)
+      allow read, update: if isMemberOfCommunityWhichHas(disId)
       match /posts/{postId} {
-        allow create: if isParticipant(disId)
-        allow read: if isMemberOfCommunityWhichHas(disId)
-        allow update: if isParticipant(disId)
+        allow create, read, update: if isMemberOfCommunityWhichHas(disId)
       }
     }
   }
