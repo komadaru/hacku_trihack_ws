@@ -5,7 +5,6 @@ import Make_community from '../views/Make_community.vue'
 import User from '../views/User.vue'
 import Community from '../views/Community.vue'
 import Discussion from '../views/Discussion.vue'
-import Top from '../views/Top.vue'
 import Prof from '../views/Prof.vue'
 import ComList from '../views/ComList.vue'
 import Firstpage from '../views/Firstpage.vue'
@@ -13,7 +12,7 @@ import Firstpage from '../views/Firstpage.vue'
 
 const routes = [
   {
-    path: '/login',
+    path: '/',
     name: 'Login',
     component: Login
   },
@@ -38,7 +37,7 @@ const routes = [
     component: Make_community
   },
   {
-    path: '/community/:cid',
+    path: '/community',
     name: 'Community',
     component: Community
   },
@@ -46,11 +45,6 @@ const routes = [
     path: '/discussion/:did',
     name: 'Discussion',
     component: Discussion
-  },
-  {
-    path: '/',
-    name: 'Top',
-    component: Top
   },
   {
     path: '/comlist',

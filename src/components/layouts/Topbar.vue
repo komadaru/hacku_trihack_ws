@@ -4,19 +4,21 @@
         <div class="collapse navbar-collapse" id="Navbar">
           <ul class="navbar-nav me-auto mb-2 mb-md-0">
             <li class="nav-item">
-              <a class="nav-link active" riaa-current="page" href="#">プロフィール</a>
+              <router-link class="routerLink" :to="{ path: '/prof'}">
+                <a class="nav-link active">プロフィール</a>
+              </router-link>
             </li>
             <li class="nav-item">
-              <a class="nav-link active" riaa-current="page" href="#">コミュニティ一覧</a>
+              <router-link class="routerLink" :to="{ path: '/comlist'}">
+                <a class="nav-link active">コミュニティ一覧</a>
+              </router-link>
             </li>
             <li class="nav-item">
-              <a class="nav-link active" riaa-current="page" href="#">コミュニティ作成</a>
+              <router-link class="routerLink" :to="{ path: '/make_community'}">
+                <a class="nav-link active">コミュニティ作成</a>
+              </router-link>
             </li>
           </ul>
-          <form class="d-flex">
-            <input class="form-control me-2" type="search" placeholder="検索..." aria-label="検索...">
-            <button class="btn btn-outline-success flex-shrink-0" type="submit">検索</button>
-          </form>
         </div>
       
     </nav>
@@ -24,6 +26,10 @@
 </template>
 
 <style>
+.routerLink{
+  text-decoration: none;
+}
+
 .container {
   max-width: 960px;
 }
@@ -43,5 +49,4 @@
   color: #fff;
   text-decoration: none;
 }
-
 </style>
