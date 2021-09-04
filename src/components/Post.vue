@@ -6,7 +6,7 @@
         </p>
         <p>{{ post.content }}</p>
         <p v-if="hasReply()">
-            <a href="javascript:void 0" @click="switchReply">{{ switchingMessage(replys.length) }}</a>
+            <a href="javascript:void 0" @click="switchReply">{{ switchingMessage() }}</a>
         </p>
     </div>
     <Form v-if="showsForm" :destNum="getPostPathById(post.id)" :parentId="post.id" @deleted="switchForm"></Form>
@@ -55,7 +55,8 @@ export default {
         switchReply() {
             this.showsReply = !this.showsReply;
         },
-        switchingMessage(nReplys) {
+        switchingMessage() {
+            let nReplys = this.post.replys.length;
             if (this.showsReply) {
                 return "▲返信(" + nReplys +")を非表示"
             }
