@@ -9,7 +9,7 @@
             <a href="javascript:void 0" @click="switchReply">{{ switchingMessage() }}</a>
         </p>
     </div>
-    <Form v-if="showsForm" :destPath="getPostPathById(post.id)"
+    <Form v-if="showsForm" :destPath="path"
      :disId="disId" :destId="post.id" @deleted="switchForm"
      @onSubmit="$emit('onFormSubmit')"></Form>
     <!--返信を再帰的に呼び出し-->
@@ -18,7 +18,7 @@
     <ul class="replys" v-if="showsReply">
         <li v-for="(rPost, index) in post.replys" :key="index">
             <Post :n="index + 1" :post="rPost" :disId ="disId"
-                :getPostPathById="getPostPathById"
+                :path="path + '/' + (index + 1)"
                 @onFormSubmit="$emit('onFormSubmit')">
             </Post>
         </li>
@@ -34,7 +34,7 @@ export default {
         n: Number,
         disId: String,
         post: Object,
-        getPostPathById: Function
+        path: String
     },
     emits: ["onFormSubmit"],
     components: {

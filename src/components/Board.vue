@@ -2,7 +2,7 @@
     <ul>
         <li v-for="(post, index) in posts" :key="index">
             <Post :n="index + 1" :post="post" :disId="disId"
-                :getPostPathById="getPostPathById"
+                :path="(index + 1).toString()"
                 @onFormSubmit="loadPosts">
             </Post>
         </li>
@@ -68,53 +68,6 @@ export default {
                 }
             }
             return tree;
-        },
-        getPostPathById(id){
-            let post = this.getPostById(id)
-            return this.getPostPath(post)
-        },
-        getPostPath(post) {
-            let index = this.getPostIndexById(post.id)
-            if (typeof post.parent === "undefined") {
-                return index       
-            } else {
-                let parentPath = this.getPostPath(post.parent)
-                return parentPath + "/" + index
-            }
-        },
-        getPostIndexById(id) {
-            let self = this
-            let post = self.getPostById(id)
-            // 返信ではないpostの場合そのままのインデックスを取得
-            if (post.parentId === void 0) {
-                return (self.posts.findIndex((p) => {
-                return p == post;
-                }) + 1).toString();
-            }
-            // 返信である場合、親の返信の中でのインデックスを取得する
-            return post.parent.replys.findIndex((p) => {
-                return p == post;
-            }) + 1;
-        },
-        getPostById(id) {
-            let self = this
-            for (let post of self.posts) {
-                let ret = self.searchPostById(post, id);
-                if (ret !== null) return ret
-            }
-            return null;
-        },
-        searchPostById(currentPost, id) {
-            // そのpostのidが探しているものと一致するならそれを返す
-            if (currentPost.id == id) {
-                return currentPost
-            }
-            // 全ての返信を探す
-            for (let reply of currentPost.replys) {
-                let ret = this.searchPostById(reply, id)
-                if (ret !== null) return ret;
-            }
-            return null;
         }
     },
     created() {
