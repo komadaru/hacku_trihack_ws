@@ -27,7 +27,6 @@ export default {
   },
   data() {
     return {
-      setId: null,
       name: "",
       description: "",
       tags: [],
