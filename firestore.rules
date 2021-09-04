@@ -10,17 +10,23 @@ service cloud.firestore {
     function isMember(comId) {
     	return request.auth.uid in getMembers(comId);
     }
+    function getCommunity(comId) {
+      return get(/databases/$(database)/documents/communities/$(comId)).data
+    }
+    function getDiscussion(disId) {
+      return get(/databases/$(database)/documents/discussions/$(disId)).data
+    }
     function getMembers(comId) {
-      return get(/databases/$(database)/documents/communities/$(comId)).data.users
+      return getCommunity(comId).users
     }
     function getComIdByDisId(disId) {
-      return get(/databases/$(database)/documents/discussions/$(disId)).data.community
+      return getDiscussion(disId).community
     }
     function isMemberOfCommunityWhichHas(disId){
       return request.auth.uid in getMembers(getComIdByDisId(disId))
     }
     function isParticipant(disId) {
-      return request.auth.uid in resource.data.participants
+      return request.auth.uid in getDiscussion(disId).participants
     }
     
     match /users/{userId} {
