@@ -15,7 +15,7 @@ import "firebase/firestore";
 export default {
     props: {
         destPath: String,
-        parentId: String
+        destId: String
     },
     data(){
         return{
@@ -29,7 +29,7 @@ export default {
                 "commenter": this.commenter,
                 "content": this.content,
                 "time": firebase.firestore.Timestamp.now(),
-                "parentId": this.parentId
+                "parentId": this.destId
                 }
             this.postComment(post);
             this.content = "";
@@ -47,11 +47,14 @@ export default {
             })
         },
         isReply(){
-            return this.parentId !== void 0;
+            return this.destId !== void 0;
         },
         cancelReplying() {
             this.$emit("deleted")
         }
+    },
+    created() {
+        console.log(this.destId)
     }
 }
 </script>
