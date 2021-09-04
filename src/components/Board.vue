@@ -37,9 +37,9 @@ export default {
             let post = self.getPostById(id)
             // 返信ではないpostの場合そのままのインデックスを取得
             if (post.parentId === void 0) {
-                return self.posts.findIndex((p) => {
+                return (self.posts.findIndex((p) => {
                 return p == post;
-                }) + 1;
+                }) + 1).toString();
             }
             // 返信である場合、親の返信の中でのインデックスを取得する
             return post.parent.replys.findIndex((p) => {

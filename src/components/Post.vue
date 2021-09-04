@@ -9,7 +9,7 @@
             <a href="javascript:void 0" @click="switchReply">{{ switchingMessage() }}</a>
         </p>
     </div>
-    <Form v-if="showsForm" :destNum="getPostPathById(post.id)" :parentId="post.id" @deleted="switchForm"></Form>
+    <Form v-if="showsForm" :destPath="getPostPathById(post.id)" :parentId="post.id" @deleted="switchForm"></Form>
     <!--返信を再帰的に呼び出し-->
     <transition @before-enter="beforeEnter" @enter="enter" @after-enter="afterEnter"
      @before-leave="beforeLeave" @leave="leave" @after-leave="afterLeave">
