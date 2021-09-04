@@ -36,7 +36,7 @@ service cloud.firestore {
       allow read: if isMemberOfCommunityWhichHas(disId)
       allow update: if isParticipant(disId)
       match /posts/{postId} {
-        allow create: if isMember(request.resource.data.community)
+        allow create: if isParticipant(disId)
         allow read: if isMemberOfCommunityWhichHas(disId)
         allow update: if isParticipant(disId)
       }
