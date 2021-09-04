@@ -6,6 +6,7 @@
       <span v-for="tag in tags" :key="tag">{{tag}}</span>
     </span> 
     状態:<span v-if="closed">閉じられました</span></p>
+  <p>{{ description }}</p>
   <Board ref="board" :posts="posts"></Board>
   <Form ref="form"></Form>
 </div>
