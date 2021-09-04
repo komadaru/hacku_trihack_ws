@@ -137,6 +137,9 @@
             appealIdea() {
                 this.showIdea = true
             },
+            disappealIdea() {
+                this.showIdea = false
+            },
 
             appealPass() {
                 this.showPass = true
