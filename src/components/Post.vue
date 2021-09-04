@@ -1,6 +1,6 @@
 <template>
     <div class="post">
-        <p><span v-if="isReply">Re:</span>
+        <p><span v-if="isReply()">Re:</span>
         {{ n }} {{ post.commenter }} {{ format(post.time) }}
         <a href="javascript:void 0" @click="switchForm" class="reply">返信</a>
         </p>
@@ -9,14 +9,13 @@
             <a href="javascript:void 0" @click="switchReply">{{ switchingMessage(replys.length) }}</a>
         </p>
     </div>
-    <Form v-if="showsForm" :isReply="true"
-        :destNum="getPostPathById(post.id)" :parentId="post.id" @deleted="switchForm"></Form>
+    <Form v-if="showsForm" :destNum="getPostPathById(post.id)" :parentId="post.id" @deleted="switchForm"></Form>
     <!--返信を再帰的に呼び出し-->
     <transition @before-enter="beforeEnter" @enter="enter" @after-enter="afterEnter"
      @before-leave="beforeLeave" @leave="leave" @after-leave="afterLeave">
     <ul class="replys" v-if="showsReply">
         <li v-for="(rPost, index) in post.replys" :key="index">
-            <Post :n="index + 1" :post="rPost" :isReply="true"
+            <Post :n="index + 1" :post="rPost"
                 :getPostPathById="getPostPathById">
             </Post>
         </li>
@@ -31,7 +30,6 @@ export default {
     props: {
         n: Number,
         post: Object,
-        isReply: Boolean,
         getPostPathById: Function
     },
     components: {
@@ -47,6 +45,9 @@ export default {
     methods: {
         format(time) {
             return moment(time).format("YYYY-MM-DD HH:mm:ss");
+        },
+        isReply() {
+            return this.post.parentId !== void 0;
         },
         hasReply() {
             return this.post.replys.length != 0;

@@ -1,6 +1,6 @@
 <template>
     <form id="form" @submit.prevent="onSubmit">
-        <p><span v-if="isReply">返信先：{{ destNum }} 
+        <p><span v-if="isReply()">返信先：{{ destNum }} 
             <button type="button" @click="cancelReplying" onclick="return false">返信をキャンセル</button></span>
          名前：<input type="text" v-model="commenter" required></p>
         <p>コメント：<textarea v-model="content" cols="70" rows="14" required></textarea></p>
@@ -14,7 +14,6 @@ import "firebase/firestore";
 
 export default {
     props: {
-        isReply: Boolean,
         destNum: Number,
         parentId: String
     },
@@ -46,6 +45,9 @@ export default {
             .catch((e) => {
                 console.error("コメントの送信に失敗しました", e)
             })
+        },
+        isReply(){
+            return this.parentId !== void 0;
         },
         cancelReplying() {
             this.$emit("deleted")
