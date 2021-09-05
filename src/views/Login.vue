@@ -1,19 +1,10 @@
 <template>
-    <head>
-        <title>Login Page</title>
-    </head>
-    <body>
-        <h1>Login Page</h1>
-    <table>
-        <tr><th>Email</th>
-        <td><input type="email" v-model="email"></td></tr>
-        <tr><th>Password</th>
-        <td><input type="password" v-model="password"></td></tr>
-        <tr><th></th><td>
-            <button @click="login">Login</button>
-        </td></tr>
-    </table>
-    </body>
+    <div class="signin">
+        <h1>サインイン</h1>
+        <input type="email" placeholder="Eメールアドレス" v-model="email">
+        <input type="password" placeholder="パスワード" v-model="password">
+        <button @click="login">サインイン</button>
+    </div>
 </template>
 
 <script>
@@ -21,29 +12,52 @@ import firebase from "firebase";
 
 export default {
     name: 'Login',
-    data: function() {
+    data() {
         return {
+            id: '',
             email: '',
             password: ''
         }
     },
     methods: {
-        login: function() {
+        login() {
             firebase.auth().signInWithEmailAndPassword(this.email, this.password).then(
                 // eslint-disable-next-line no-unused-vars
-                user => {
+                result => {
+                    this.id = result.user.uid;
+                    this.createdoc();
                     alert('Success!')
-                    this.$router.push('/')
+                    this.$router.push('/user/' + result.user.uid)
                 },
                 err => {
                     alert(err.message)
                 }
             )
-        }
+        },
+        createdoc() {
+            let userData = {
+                id: this.id,
+                email: this.email,
+                password: this.password,
+            }
+            var db = firebase.firestore();
+            db.collection('users').doc(this.id).set(userData)
+        },
     }
 }
 </script>
 
 <style scoped>
+.signin {
+    margin-top: 30px;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
+}
 
+input {
+    margin: 10px 0;
+    padding: 10px;
+}
 </style>
