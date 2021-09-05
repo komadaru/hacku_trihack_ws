@@ -19,55 +19,57 @@
                     
                     <li>種別</li>
                     <label class="discussiontype">
-                        <input type="radio" name="discussiontype" value="賛成・反対型" v-model="formdata.type" @change="disappealIdea();">賛成・反対型
+                        <input type="radio" name="discussiontype" value="賛成・反対型" v-model="formdata.type">賛成・反対型
                     </label>
                     <label class="discussiontype">
-                        <input type="radio" id="type" name="discussiontype" value="ディベート型" v-model="formdata.type" @change="disappealIdea();">ディベート型
+                        <input type="radio" id="type" name="discussiontype" value="ディベート型" v-model="formdata.type">ディベート型
                     </label>
                     <label class="discussiontype">
-                        <input type="radio" id="type" name="discussiontype" value="アイデア募集型" v-model="formdata.type" @change="appealIdea();">アイデア募集型
+                        <input type="radio" id="type" name="discussiontype" value="アイデア募集型" v-model="formdata.type">アイデア募集型
                     </label>
                     <label class="discussiontype">
-                        <input type="radio" id="type" name="discussiontype" value="複数選択型" v-model="formdata.type" @change="disappealIdea();">複数選択型
+                        <input type="radio" id="type" name="discussiontype" value="複数選択型" v-model="formdata.type">複数選択型
                     </label>
                     
                     <li>クローズ条件</li>
                     <label class="closeconditions">
-                        <input type="radio" name="closemanual" value="手動ON" v-model="formdata.closemanual">手動クローズON
+                        <input type="radio" name="closeauto" value="manual-close" v-model="formdata.closeauto">手動クローズ
                     </label>
                     <label class="closeconditions">
-                        <input type="radio" name="closemanual" value="手動OFF" v-model="formdata.closemanual">手動クローズOFF
+                        <input type="radio" name="closeauto" value="auto-close" v-model="formdata.closeauto">自動クローズ
                     </label>
+                    <div v-show="formdata.closeauto==='auto-close'">
                     <label class="closeconditions">
-                        <input type="checkbox" name="closeconditions" value="期限を設定" v-model="formdata.closeconditions" @change="appealCal();">期限を設定
+                        <input type="checkbox" name="closeconditions" value="期限を設定" v-model="showCal">期限を設定
                     <div v-show="showCal">
                         <flat-pickr placeholder="日時を入力" v-model="formdata.timelimit" :config="config"></flat-pickr>
                     </div>
                     </label>
                     <label class="closeconditions">
-                    <div v-show="showIdea">
-                        <input type="checkbox" id="clc" name="closeconditions" value="上限アイデア数を設定" v-model="formdata.closeconditions" @change="appealIdeaAmo();">上限アイデア数を設定
+                    <div v-show="formdata.type==='アイデア募集型'">
+                        <input type="checkbox" id="clc" name="closeconditions" value="上限アイデア数を設定" v-model="showIdeaAmo">上限アイデア数を設定
                         <div v-show="showIdeaAmo">
                             <input type="number" step="10" min="0" v-model="formdata.ideaamo">
                         </div>
                     </div>
                     </label>
                     <label class="closeconditions">
-                        <input type="checkbox" id="clc" name="closeconditions" value="上限コメント数を設定" v-model="formdata.closeconditions" @change="appealComAmo();">上限コメント数を設定
+                        <input type="checkbox" id="clc" name="closeconditions" value="上限コメント数を設定" v-model="showComAmo">上限コメント数を設定
                         <div v-show="showComAmo">
                             <input type="number" step="10" min="0" v-model="formdata.comamo">
                         </div>
                     </label>
+                    </div>
                     
                     <li>公開/非公開設定</li>
                     <label class="scope">
-                        <input type="radio" id="oc" name="scope" value="公開" v-model="formdata.scope" @change="disappealPass();">公開
+                        <input type="radio" id="oc" name="scope" value="公開" v-model="formdata.scope">公開
                     </label>
                     <label class="scope">
-                        <input type="radio" id="oc" name="scope" value="非公開" v-model="formdata.scope" @change="appealPass();">非公開
+                        <input type="radio" id="oc" name="scope" value="非公開" v-model="formdata.scope">非公開
                     </label>
                     <label class="scope">
-                    <div v-show="showPass">
+                    <div v-show="formdata.scope === '非公開'">
                         <input class="dpass" type="password" v-model="formdata.dpass" placeholder="パスワードを入力">
                     </div>
                     </label>
@@ -104,15 +106,13 @@
                     minDate: null,
                 },
                 showCal: false,
-                showIdea: false,
-                showPass: false,
                 showIdeaAmo: false,
                 showComAmo: false,
 
                 redirect: "/",
                 formdata: {
-                    name: "", description: "", type: "", closemanual: "",
-                    closeconditions: "", timelimit: "", ideaamo: "",
+                    name: "", description: "", type: "", closeauto: true,
+                    timelimit: "", ideaamo: "",
                     comamo: "", scope: "", dpass: ""
                 }
             }
@@ -133,52 +133,14 @@
                 this.config.minDate = currentdate.getFullYear() + '-' + (currentdate.getMonth() + 1) + '-' +
                 currentdate.getDate() + ' ' + currentdate.getHours() + ':' + (currentdate.getMinutes() + 1)
             },
-            // カレンダーを表示/非表示
-            appealCal() {
-                if (this.showCal === false) {
-                    this.showCal = true
-                } else {
-                    this.showCal = false
-                }
-            },
-            disappealCal() {
-                this.showCal = false
-            },
-            
-            appealIdea() {
-                this.showIdea = true
-            },
-            disappealIdea() {
-                this.showIdea = false
-            },
-
-            appealPass() {
-                this.showPass = true
-            },
-            disappealPass() {
-                this.showPass = false
-            },
-
-            appealIdeaAmo() {
-                if (this.showIdeaAmo === false) {
-                    this.showIdeaAmo = true
-                } else {
-                    this.showIdeaAmo = false
-                }
-            },
-            
-            appealComAmo() {
-                if (this.showComAmo === false) {
-                    this.showComAmo = true
-                } else {
-                    this.showComAmo = false
-                }
-            },
 
             submit() {
                 post(this.formdata).then(() => {
                     this.$router.push(this.redirect);
                 })
+            },
+            debug(value) {
+                console.log(value)
             }
         },
     }
