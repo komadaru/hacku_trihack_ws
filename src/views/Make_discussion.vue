@@ -10,67 +10,69 @@
                 <ul>
                     <li>議論テーマ設定</li>
                     <label class="theme">
-                        <input class="themeEdit" v-model="themeEdit" placeholder="テーマを入力">
+                        <input class="themeEdit" v-model="formdata.name" placeholder="テーマを入力">
                     </label>
                     <label class="theme">
                         <p style="white-space: pre-line;"></p>
-                        <textarea v-model="datail" placeholder="テーマの説明を入力"></textarea>
+                        <textarea v-model="formdata.description" placeholder="テーマの説明を入力"></textarea>
                     </label>
                     
                     <li>種別</li>
                     <label class="discussiontype">
-                        <input type="radio" name="discussiontype" value="賛成・反対型" @change="disappealIdea();">賛成・反対型
+                        <input type="radio" name="discussiontype" value="賛成・反対型" v-model="formdata.type" @change="disappealIdea();">賛成・反対型
                     </label>
                     <label class="discussiontype">
-                        <input type="radio" name="discussiontype" value="ディベート型" @change="disappealIdea();">ディベート型
+                        <input type="radio" id="type" name="discussiontype" value="ディベート型" v-model="formdata.type" @change="disappealIdea();">ディベート型
                     </label>
                     <label class="discussiontype">
-                        <input type="radio" name="discussiontype" value="アイデア募集型" @change="appealIdea();">アイデア募集型
+                        <input type="radio" id="type" name="discussiontype" value="アイデア募集型" v-model="formdata.type" @change="appealIdea();">アイデア募集型
                     </label>
                     <label class="discussiontype">
-                        <input type="radio" name="discussiontype" value="複数選択型" @change="disappealIdea();">複数選択型
+                        <input type="radio" id="type" name="discussiontype" value="複数選択型" v-model="formdata.type" @change="disappealIdea();">複数選択型
                     </label>
                     
                     <li>クローズ条件</li>
                     <label class="closeconditions">
-                        <input type="radio" name="closemanual" value="手動ON">手動クローズON
+                        <input type="radio" name="closemanual" value="手動ON" v-model="formdata.closemanual">手動クローズON
                     </label>
                     <label class="closeconditions">
-                        <input type="radio" name="closemanual" value="手動OFF">手動クローズOFF
+                        <input type="radio" name="closemanual" value="手動OFF" v-model="formdata.closemanual">手動クローズOFF
                     </label>
                     <label class="closeconditions">
-                        <input type="checkbox" name="closeconditions" value="期限を設定" @change="appealCal();">期限を設定
+                        <input type="checkbox" name="closeconditions" value="期限を設定" v-model="formdata.closeconditions" @change="appealCal();">期限を設定
                     <div v-show="showCal">
-                        <flat-pickr placeholder="日時を入力" v-model="date" :config="config"></flat-pickr>
+                        <flat-pickr placeholder="日時を入力" v-model="formdata.timelimit" :config="config"></flat-pickr>
                     </div>
                     </label>
                     <label class="closeconditions">
                     <div v-show="showIdea">
-                        <input type="checkbox" name="closeconditions" value="上限アイデア数を設定" @change="appealIdeaAmo();">上限アイデア数を設定
+                        <input type="checkbox" id="clc" name="closeconditions" value="上限アイデア数を設定" v-model="formdata.closeconditions" @change="appealIdeaAmo();">上限アイデア数を設定
                         <div v-show="showIdeaAmo">
-                            <input type="number" step="10" min="0" v-model="ideaAmount">
+                            <input type="number" step="10" min="0" v-model="formdata.ideaamo">
                         </div>
                     </div>
                     </label>
                     <label class="closeconditions">
-                        <input type="checkbox" name="closeconditions" value="上限コメント数を設定" @change="appealComAmo();">上限コメント数を設定
+                        <input type="checkbox" id="clc" name="closeconditions" value="上限コメント数を設定" v-model="formdata.closeconditions" @change="appealComAmo();">上限コメント数を設定
                         <div v-show="showComAmo">
-                            <input type="number" step="10" min="0" v-model="comAmount">
+                            <input type="number" step="10" min="0" v-model="formdata.comamo">
                         </div>
                     </label>
                     
                     <li>公開/非公開設定</li>
                     <label class="scope">
-                        <input type="radio" name="scope" value="公開" @change="disappealPass();">公開
+                        <input type="radio" id="oc" name="scope" value="公開" v-model="formdata.scope" @change="disappealPass();">公開
                     </label>
                     <label class="scope">
-                        <input type="radio" name="scope" value="非公開" @change="appealPass();">非公開
+                        <input type="radio" id="oc" name="scope" value="非公開" v-model="formdata.scope" @change="appealPass();">非公開
                     </label>
                     <label class="scope">
                     <div v-show="showPass">
-                        <input class="dpass" type="password" v-model="dpass" placeholder="パスワードを入力">
+                        <input class="dpass" type="password" v-model="formdata.dpass" placeholder="パスワードを入力">
                     </div>
                     </label>
+
+                    <button>作成</button>
                 </ul>
             </div>
 
@@ -85,7 +87,9 @@
     // Import outside library from main.js
     import flatPickr from 'vue-flatpickr-component';
 
-    import Topbar from '@/components/layouts/Topbar'
+    import Topbar from '@/components/layouts/Topbar';
+
+    import { post } from '@/plugins/auth'
 
     export default {
         data() {
@@ -104,6 +108,13 @@
                 showPass: false,
                 showIdeaAmo: false,
                 showComAmo: false,
+
+                redirect: "/",
+                formdata: {
+                    name: "", description: "", type: "", closemanual: "",
+                    closeconditions: "", timelimit: "", ideaamo: "",
+                    comamo: "", scope: "", dpass: ""
+                }
             }
         },
         components: {
@@ -162,6 +173,12 @@
                 } else {
                     this.showComAmo = false
                 }
+            },
+
+            submit() {
+                post(this.formdata).then(() => {
+                    this.$router.push(this.redirect);
+                })
             }
         },
     }
@@ -182,6 +199,11 @@
 
     h1 {
         color: #3cd371;
+    }
+
+    button {
+        margin-top: 20px;
+        margin-right: 37px;
     }
 
     .themeEdit {
