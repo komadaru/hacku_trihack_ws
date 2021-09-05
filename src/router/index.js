@@ -43,7 +43,7 @@ const routes = [
     component: Community
   },
   {
-    path: '/make_discussion',
+    path: '/make_discussion/:cid',
     name: 'Make_discussion',
     component: Make_discussion
   },

@@ -6,7 +6,7 @@
         <topbar />
         <div class="main">
             <h1>議論を作成</h1>
-            <div class="main-list">
+            <form @submit.prevent="submit">
                 <ul>
                     <li>議論テーマ設定</li>
                     <label class="theme">
@@ -74,9 +74,9 @@
                     </div>
                     </label>
 
-                    <button>作成</button>
+                    <input type="submit" value="作成">
                 </ul>
-            </div>
+            </form>
 
             <div class="footer">
             
@@ -91,7 +91,7 @@
 
     import Topbar from '@/components/layouts/Topbar';
 
-    import { post } from '@/plugins/auth'
+    import firebase from "firebase/app";
 
     export default {
         data() {
@@ -135,10 +135,32 @@
             },
 
             submit() {
-                post(this.formdata).then(() => {
-                    this.$router.push(this.redirect);
-                })
-            },
+                let data = this.formdata
+                const room = 'discussions'
+                firebase.auth().onAuthStateChanged((user) => {
+                    if (user) {
+                        let disData = {
+                            prop: user.uid,
+                            community: this.$route.params.cid,
+                            name: data['name'],
+                            description: data['description'],
+                            type: data['type'],
+                            timelimit: data['timelimit'],
+                            ideaamo: data['ideaamo'],
+                            comamo: data['comamo'],
+                            scope: data['scope'],
+                            dpass: data['dpass']
+                        }
+                        firebase.firestore().collection(room).add(disData)
+                            .then((value) => {
+                                console.log("Data saved successfully!")
+                                this.$router.push("/discussion/" + value.id)
+                                })
+                            .catch((error) => console.log(error))
+                    }
+                }
+            )},
+
             debug(value) {
                 console.log(value)
             }
