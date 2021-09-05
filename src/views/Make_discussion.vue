@@ -160,10 +160,6 @@
                     }
                 }
             )},
-
-            debug(value) {
-                console.log(value)
-            }
         },
     }
 </script>
