@@ -42,7 +42,6 @@ export default {
     },
     data(){
         return{
-            posts: {},
             showsReply: true,
             showsForm: false
         }
