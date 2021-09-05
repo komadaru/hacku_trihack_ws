@@ -8,7 +8,7 @@
     </span> 
     状態:<span v-if="closed">閉じられました</span></p>
   <p>{{ description }}</p>
-  <Board ref="board" :disId="disId"></Board>
+  <Board ref="board" :disId="disId" :idUsers="idUsers" v-if="boardOk"></Board>
   <PostForm ref="form" :disId="disId"></PostForm>
   </div>
   <p class="invalid-message" v-else>議論 (id:{{ disId }})は存在しないか、閲覧する権限がありません。</p>
@@ -31,38 +31,63 @@ export default {
   data() {
     return {
       disId: this.$route.params.did,
+      community: "",
       name: "",
       description: "",
       tags: [],
       closed: false,
       type: "",
-      isValid: true
+      isValid: true,
+      idUsers: {},
+      boardOk: false
     }
   },
   methods: {
+    setIdUsers() {
+      let db = firebase.firestore();
+      // コミュニティの情報を取得
+      let comRef = db.collection("communities").doc(this.community);
+      return comRef.get().then((doc) => {
+        let uids = doc.data().users;
+        let uCol = db.collection("users")
+        let promises = [];
+        for (let uid of uids) {
+          promises.push(uCol.doc(uid).get())
+        }
+        Promise.all(promises).then((docs) => {
+          for (let d of docs) {
+            this.idUsers[d.id] = d.data();
+          }
+        })
+      })
+    },
     loadDiscuss() {
       let db = firebase.firestore();
       // 議論の情報を取得
       let disRef = db.collection("discussions").doc(this.disId);
-      disRef.get().then((doc) => {
+      return disRef.get().then((doc) => {
         let data = doc.data()
         this.name = data.name
         this.closed = data.closed
         if (data.tags !== void 0) {this.tags = data.tags}
         this.description = data.description
         this.type = data.type
-      }).catch(() =>{this.isValid = false});
+        this.community = data.community
+      }).catch(() => {this.isValid = false});
     }
   },
   created() {
     //デバッグ
-    let self = this
     firebase.auth().signInWithEmailAndPassword(
       "example@example.com", "example")
     .then((v) => {
       console.log("ログイン成功 uid:" + v.user.uid)
       console.log("コメントを初期化しています");
-      self.loadDiscuss();
+      this.loadDiscuss().then(() => {
+        this.setIdUsers().then(() => {
+          this.boardOk = true
+        });
+      });
     })
     .catch(e => console.error("ログイン失敗" + e))
     //ここまでデバッグ
