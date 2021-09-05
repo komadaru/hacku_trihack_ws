@@ -29,7 +29,6 @@ export default {
         loadPosts(){
             let db = firebase.firestore();
             // 投稿を全て取得
-            console.log(this.disId)
             let postsRef = db.collection("discussions")
                 .doc(this.disId).collection("posts")
             let posts = [];
@@ -41,7 +40,6 @@ export default {
                     post.time = post.time.toDate(); //日付をDate型に変更
                     posts.push(post)
                 }
-                console.log(posts)
                 this.posts = this.sortByTime(this.makeTree(posts));
             }).catch(e => console.error(e))
         },
