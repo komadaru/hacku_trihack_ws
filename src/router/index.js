@@ -28,7 +28,7 @@ const routes = [
     component: User
   },
   {
-    path: '/user',
+    path: '/user/:userId',
     name: 'User',
     component: User
   },
@@ -64,7 +64,7 @@ const routes = [
   },
   {
     path: '/firstpage',
-    name: 'Firstpage',
+    name: 'firstpage',
     component: Firstpage
   },
 ]
