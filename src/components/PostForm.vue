@@ -2,7 +2,7 @@
     <form id="form" @submit.prevent="onSubmit">
         <p><span v-if="isReply()">返信先：{{ destPath }} 
             <button type="button" @click="deleteForm" onclick="return false">返信をキャンセル</button></span>
-         名前：<input type="text" v-model="commenter" required></p>
+         名前：{{ name }}</p>
         <p>コメント：<textarea v-model="content" cols="70" rows="14" required></textarea></p>
         <input type="submit">
     </form>
@@ -20,6 +20,7 @@ export default {
     },
     data(){
         return{
+            name: "",
             commenter: "",
             content: "",
         }
@@ -49,6 +50,19 @@ export default {
                 console.error("コメントの送信に失敗しました", e)
             })
         },
+        setUser() {
+            firebase.auth().onAuthStateChanged((user) => {
+                if (user) {
+                    this.commenter = user.uid
+                    firebase.firestore().collection("users")
+                        .doc(this.commenter).get()
+                        .then((doc) => this.name = doc.data().name)
+                        .catch(() => this.name = "ユーザー名が取得できません")
+                } else {
+                    console.error("ログインしていません")
+                }
+            });
+        },
         isReply(){
             return this.destId !== void 0;
         },
@@ -59,6 +73,9 @@ export default {
         deleteForm() {
             this.$emit("deleted")
         }
+    },
+    created() {
+        this.setUser()
     }
 }
 </script>
