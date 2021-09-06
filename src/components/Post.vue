@@ -1,13 +1,13 @@
 <template>
-    <div :class="['post-wrapper',{'vote':post.section==='vote'}]">
+    <div :class="['post-wrapper',{'vote-section':post.type==='投票'}]">
     <div class="post">
         <p>
             <span v-if="isReply()">
-                <span v-if="post.section!='vote'">(投票)</span>
+                <span v-if="isVote()">(投票)</span>
                 <span v-else>(Re)</span>
             </span>
-            <span v-if="post.choice!==void 0" :class="['choice', postTypeClass(post.choice)]">
-                {{post.choice}}</span>
+            <span v-if="isVote()" :class="['choice', postTypeClass(post.voteChoice)]">
+                {{post.voteChoice}}</span>
             <span v-else :class="['type', postTypeClass(post.type)]">
                 {{ post.type }}</span>
             <span class="path">コメントNo: ({{ path }}) </span>
@@ -17,7 +17,7 @@
         <a href="javascript:void 0" @click="switchForm" class="reply">返信</a>
         </p>
         <p>{{ post.content }}</p>
-        <VoteInfo v-if="post.section==='vote'" :post="post"
+        <VoteInfo v-if="post.type==='投票'" :post="post"
         :vote="post.vote">
         </VoteInfo>
         <p v-if="hasReply()">
@@ -70,13 +70,16 @@ export default {
             return moment(time).format("YYYY-MM-DD HH:mm:ss");
         },
         isReply() {
-            return this.post.parentId !== void 0;
+            return typeof this.post.parentId !== "undefined";
+        },
+        isVote() {
+            return typeof this.post.voteChoice !== "undefined";
         },
         showsReplyDefalut() {
-            /* 親のpostが存在し、そこに何らかのセクションがあれば
+            /* 親のpostが存在し、それが投票ならば
             デフォルトで表示しない*/
             let hasParent = this.post.parent !== void 0;
-            return !(hasParent && this.post.parent.section !== void 0)
+            return !(hasParent && this.post.parent.type !== "投票")
         },
         hasReply() {
             return this.post.replys.length != 0;
@@ -213,9 +216,12 @@ export default {
     .answer::before {
         content: "A."
     }
+    .vote::before {
+        content: "🗳"
+    }
 
     /*セクション*/
-    .vote {
+    .vote-section {
         border: solid 0.1rem;
         background: skyblue
     }

@@ -1,12 +1,14 @@
 <template>
     <form id="form" @submit.prevent="onSubmit">
-        <label v-if="vote!==void 0">
+        <label v-if="isVote()">
             投票：<select v-model="voteChoice" required>
-            <option :value="choice" v-for="choice in vote.choices" :key="choice">{{choice}}</option>
+                <option :value="choice" v-for="choice in vote.choices" :key="choice">{{choice}}</option>
             </select>
         </label>
-        <label v-else>タイプ：<select v-model="type" required>
-            <option :value="key" v-for="(t,key) in types()" :key="key">{{key}}</option>
+        <label v-else>
+            タイプ：
+            <select v-model="type" required>
+                <option :value="key" v-for="(t,key) in types()" :key="key">{{key}}</option>
             </select>
         </label>
         <label>
@@ -37,7 +39,7 @@ export default {
             name: "",
             commenter: "",
             content: "",
-            voteChoice: "賛成",
+            voteChoice: null,
         }
     },
     methods: {
@@ -48,7 +50,7 @@ export default {
                 "content": this.content,
                 "time": firebase.firestore.Timestamp.now(),
                 "parentId": this.destId,
-                "choice": this.voteChoice
+                "voteChoice": this.voteChoice
                 }
             this.postComment(post);
             this.$emit("onSubmit")
@@ -84,7 +86,10 @@ export default {
             return typeMap
         },
         isReply(){
-            return this.destId !== void 0;
+            return typeof this.destId !== "undefined";
+        },
+        isVote() {
+            return typeof this.vote !== "undefined";
         },
         clear() {
             this.commenter = "";
