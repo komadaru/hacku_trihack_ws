@@ -219,9 +219,16 @@ export default {
         content: "🗳"
     }
 
+    .close {
+        color: green;
+    }
+    .close::before {
+        content: "✓"
+    }
+
     /*セクション*/
     .vote-section {
         border: solid 0.1rem;
-        background: skyblue
+        background: paleturquoise;
     }
 </style>
