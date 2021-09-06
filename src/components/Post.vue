@@ -6,7 +6,9 @@
         <a href="javascript:void 0" @click="switchForm" class="reply">返信</a>
         </p>
         <p>{{ post.content }}</p>
-        <VoteData v-if="post.section==='vote'" :post="post"></VoteData>
+        <VoteInfo v-if="post.section==='vote'" :post="post"
+        :choices="['賛成', '反対']" :nChoicesPerPerson="1">
+        </VoteInfo>
         <p v-if="hasReply()">
             <a href="javascript:void 0" @click="switchReply">{{ switchingMessage() }}</a>
         </p>
@@ -30,7 +32,7 @@
 
 <script>
 import PostForm from "./PostForm.vue"
-import VoteData from "./VoteData.vue"
+import VoteInfo from "./VoteInfo.vue"
 import typeMap from "../../plugins/typeMap.js"
 const moment = require("moment")
 
@@ -44,7 +46,7 @@ export default {
     emits: ["onFormSubmit"],
     components: {
         PostForm,
-        VoteData
+        VoteInfo
     },
     data(){
         return{
