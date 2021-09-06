@@ -1,9 +1,8 @@
 <template>
     <form id="form" @submit.prevent="onSubmit">
-        <p>タイプ：<input list="type-list">
-        <datalist id="type-list">
-            <option :value="key" v-for="(type,key) in types()" :key="type"></option>
-        </datalist>
+        <p>タイプ：<select v-model="type" required>
+            <option :value="key" v-for="(t,key) in types()" :key="key">{{key}}</option>
+            </select>
             <span v-if="isReply()">返信先：{{ destPath }} 
             <button type="button" @click="deleteForm" onclick="return false">返信をキャンセル</button></span>
          名前：{{ name }}</p>
