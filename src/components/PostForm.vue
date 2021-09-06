@@ -195,7 +195,9 @@ export default {
         types() {
             let ret = {...typeMap}
             if (this.isReply()) {
+                // 返信ではクローズと投票は選べない
                 delete ret["クローズ"]
+                delete ret["投票"]
             }
             return ret
         },
