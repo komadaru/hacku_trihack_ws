@@ -9,7 +9,7 @@
     状態:<span v-if="closed">閉じられました</span></p>
   <p>{{ description }}</p>
   <Board ref="board" :disId="disId" :idUsers="idUsers" v-if="boardOk"></Board>
-  <PostForm ref="form" :disId="disId"></PostForm>
+  <PostForm ref="form" :disId="disId" @onSubmit="reloadPosts"></PostForm>
   </div>
   <p class="invalid-message" v-else>議論 (id:{{ disId }})は存在しないか、閲覧する権限がありません。</p>
 </div>
@@ -74,6 +74,9 @@ export default {
         this.type = data.type
         this.community = data.community
       }).catch(() => {this.isValid = false});
+    },
+    reloadPosts() {
+      this.$refs.board.loadPosts()
     }
   },
   created() {
