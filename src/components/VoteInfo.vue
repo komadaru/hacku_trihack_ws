@@ -1,6 +1,8 @@
 <template>
     <div class="vote-info">
         <h2>投票セクション</h2>
+        <p>期日：{{ vote.timelimit }}({{timeLeft()}})</p>
+        <p>状態：{{ state() }}</p>
         <p>返信して投票してください</p>
         <p v-for="(count, choice) in voteResults()" :key="count">
             {{ choice }}：{{ count }}票
@@ -9,6 +11,8 @@
 </template>
 
 <script>
+import moment from "moment";
+
 export default {
     props: {
         post: Object,
@@ -20,7 +24,9 @@ export default {
             let userVotes = [];
             for (let reply of this.post.replys) {
                 if (this.vote.choices.includes(reply.voteChoice)){
-                    userVotes.push([reply.commenter, reply.voteChoice]);
+                    userVotes.push(
+                        [reply.commenter, reply.voteChoice, reply.time]
+                    );
                 }
             }
             // 一人n票なので後ろからn票を採用する
@@ -33,7 +39,8 @@ export default {
                     return el[0] === vote[0];
                 }).length
                 // 有効、無効を振り分ける
-                if (nVoted < this.vote.nChoicesPerPerson) {
+                if (nVoted < this.vote.nChoicesPerPerson
+                    && vote[2] < this.vote.timelimit) {
                     validUserVotes.push(vote)
                 } else {
                     invalidUserVotes.push(vote)
@@ -49,6 +56,43 @@ export default {
             // 無効票の数も載せておく
             results["無効票"] = invalidUserVotes.length;
             return results;
+        },
+        isFinished() {
+            return this.vote.timelimit > new Date();
+        },
+        state() {
+            if (this.isFinished()) {
+                return "終了済み"
+            }
+            return "投票受付中"
+        },
+        timeLeft() {
+            let s = moment(this.vote.timelimit);
+            let e = moment(new Date());
+            let prefix
+            if (s - e > 0) {
+                prefix = "残り"
+            } else {
+                prefix = "終了してから"
+            }
+            let times = [
+                ["years", "年"],
+                ["months", "月"],
+                ["days", "日"],
+                ["hours", "時間"],
+                ["minutes", "分"],
+                ["seconds", "秒"]
+                ]
+            let absDiff
+            let unit
+            for (let time of times) {
+                absDiff = Math.abs(s.diff(e, time[0]))
+                if (absDiff >= 1) {
+                    unit = time[1];
+                    break
+                }
+            }
+            return prefix + absDiff + unit
         }
     }
 }
