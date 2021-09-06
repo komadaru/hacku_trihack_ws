@@ -7,6 +7,7 @@
         <p v-for="(count, choice) in voteResults()" :key="count">
             {{ choice }}：{{ count }}票
         </p>
+        <p v-if="isFinished()">結果:{{ finalChoice() }}</p>
     </div>
 </template>
 
@@ -57,8 +58,22 @@ export default {
             results["無効票"] = invalidUserVotes.length;
             return results;
         },
+        finalChoice() {
+            let result = this.voteResults()
+            delete result["無効票"]
+            let max = Object.values(result).reduce((a, b) => {
+                return Math.max(a, b)
+            });
+            let ret = [];
+            for (let key of Object.keys(result)) {
+                if (result[key] === max) {
+                    ret.push(key)
+                }
+            }
+            return ret.join(",") + "(" + ret.length + ")"
+        },
         isFinished() {
-            return this.vote.timelimit > new Date();
+            return this.vote.timelimit < new Date();
         },
         state() {
             if (this.isFinished()) {
