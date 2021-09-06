@@ -78,8 +78,8 @@ export default {
         showsReplyDefalut() {
             /* 親のpostが存在し、それが投票ならば
             デフォルトで表示しない*/
-            let hasParent = this.post.parent !== void 0;
-            return !(hasParent && this.post.parent.type !== "投票")
+            let hasParent = typeof this.post.parent !== "undefined";
+            return !(hasParent && this.post.parent.type === "投票")
         },
         hasReply() {
             return this.post.replys.length != 0;
