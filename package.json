@@ -13,6 +13,7 @@
     "core-js": "^3.6.5",
     "firebase": "^8.10.0",
     "jquery": "^3.6.0",
+    "moment": "^2.29.1",
     "vue": "^3.0.0",
     "vue-ctk-date-time-picker": "^2.5.0",
     "vue-flatpickr-component": "^9.0.5",
