@@ -90,6 +90,10 @@ export default {
                 }
             if (this.type === "投票") {
                 post.vote = this.creatingVote;
+                // Timestamp型に変換
+                post.vote.timelimit
+                    = firebase.firestore.Timestamp.fromDate(
+                        post.vote.timelimit)
                 // 空文字を除去
                 post.vote.choices = post.vote.choices.filter((el) => {return el !== ""})
             }
