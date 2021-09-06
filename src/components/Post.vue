@@ -128,7 +128,6 @@ export default {
 <style scoped>
     .post {
         border: solid 0.1rem black;
-        border-radius: 20%;
         margin: 1rem auto;
     }
 
