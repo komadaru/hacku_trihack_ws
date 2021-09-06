@@ -21,7 +21,7 @@
                     type="button"
                     @click="deleteForm"
                     onclick="return false"
-                    class="btn btn-primary">
+                    class="btn btn-warning">
                     返信をキャンセル</button>
                 </span>
             </div>

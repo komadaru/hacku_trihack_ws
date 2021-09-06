@@ -9,13 +9,13 @@
     状態:
     <span v-if="closed">
       クローズされました
-      <button type="button" @click="switchOpen">
+      <button type="button" class="btn btn-warning" @click="switchOpen">
         再度オープンする
       </button>
     </span>
     <span v-else>
       オープン
-      <button type="button" @click="switchOpen">
+      <button type="button" class="btn btn-secondary" @click="switchOpen">
         クローズする
       </button>
     </span>
