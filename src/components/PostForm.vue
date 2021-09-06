@@ -114,9 +114,21 @@ export default {
             col.add(postData)
             .then((docRef) => {
                 console.log("コメントを送信しました", docRef.id)
+                if (postData.type === "クローズ") {
+                    this.closeDiscuss(postData);
+                }
             })
             .catch((e) => {
                 console.error("コメントの送信に失敗しました", e)
+            })
+        },
+        closeDiscuss(postData) {
+            let db = firebase.firestore();
+            let disRef = db.collection("discussions").doc(this.disId);
+            disRef.update(
+                {closed: true, conclusion: postData.content}).then(() => {
+                console.log("クローズしました")
+                this.$emit("onClosed")
             })
         },
         setUser() {
@@ -133,7 +145,11 @@ export default {
             });
         },
         types() {
-            return typeMap
+            let ret = {...typeMap}
+            if (this.isReply()) {
+                delete ret["クローズ"]
+            }
+            return ret
         },
         isReply(){
             return typeof this.destId !== "undefined";
