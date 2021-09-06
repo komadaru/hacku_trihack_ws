@@ -36,11 +36,16 @@
                     type="number"
                     v-model="creatingVote.nChoicesPerPerson">
             </label>
+            <br/>
+            <label>
+                期日：
             <flatPickr
                 placeholder="期日を入力"
                 :config="{enableTime:true}"
-                :v-model="creatingVote.timelimit">
+                v-model="creatingVote.timelimit"
+                @on-change="test">
             </flatPickr>
+            </label>
          </div>
         <label>コメント：<textarea v-model="content" cols="70" rows="14" required></textarea></label>
         <input type="submit">
@@ -93,7 +98,7 @@ export default {
                 // Timestamp型に変換
                 post.vote.timelimit
                     = firebase.firestore.Timestamp.fromDate(
-                        post.vote.timelimit)
+                        new Date(post.vote.timelimit))
                 // 空文字を除去
                 post.vote.choices = post.vote.choices.filter((el) => {return el !== ""})
             }
