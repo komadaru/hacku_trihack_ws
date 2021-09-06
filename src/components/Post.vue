@@ -1,10 +1,12 @@
 <template>
+    <div :class="['post-wrapper',{'vote':post.section==='vote'}]">
     <div class="post">
         <p><span v-if="isReply()">(Re)</span><span :class="postTypeClass(post.type)">{{ post.type }}</span>
-        {{ n }} {{ post.commenter }} {{ format(post.time) }}
+        {{ n }} {{ post.commenterName }} {{ format(post.time) }}
         <a href="javascript:void 0" @click="switchForm" class="reply">返信</a>
         </p>
         <p>{{ post.content }}</p>
+        <VoteData v-if="post.section==='vote'" :post="post"></VoteData>
         <p v-if="hasReply()">
             <a href="javascript:void 0" @click="switchReply">{{ switchingMessage() }}</a>
         </p>
@@ -23,10 +25,12 @@
             </Post>
         </li>
     </ul></transition>
+    </div>
 </template>
 
 <script>
 import PostForm from "./PostForm.vue"
+import VoteData from "./VoteData.vue"
 import typeMap from "../../plugins/typeMap.js"
 const moment = require("moment")
 
@@ -39,11 +43,12 @@ export default {
     },
     emits: ["onFormSubmit"],
     components: {
-        PostForm
+        PostForm,
+        VoteData
     },
     data(){
         return{
-            showsReply: true,
+            showsReply: this.showsReplyDefalut(),
             showsForm: false
         }
     },
@@ -53,6 +58,12 @@ export default {
         },
         isReply() {
             return this.post.parentId !== void 0;
+        },
+        showsReplyDefalut() {
+            /* 親のpostが存在し、そこに何らかのセクションがあれば
+            デフォルトで表示しない*/
+            let hasParent = this.post.parent !== void 0;
+            return !(hasParent && this.post.parent.section !== void 0)
         },
         hasReply() {
             return this.post.replys.length != 0;
@@ -182,5 +193,11 @@ export default {
 
     .answer::before {
         content: "A."
+    }
+
+    /*セクション*/
+    .vote {
+        border: solid 0.1rem;
+        background: skyblue
     }
 </style>
