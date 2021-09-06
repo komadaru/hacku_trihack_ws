@@ -1,6 +1,10 @@
 <template>
     <form id="form" @submit.prevent="onSubmit">
-        <p><span v-if="isReply()">返信先：{{ destPath }} 
+        <p>タイプ：<input list="type-list">
+        <datalist id="type-list">
+            <option :value="key" v-for="(type,key) in types()" :key="type"></option>
+        </datalist>
+            <span v-if="isReply()">返信先：{{ destPath }} 
             <button type="button" @click="deleteForm" onclick="return false">返信をキャンセル</button></span>
          名前：{{ name }}</p>
         <p>コメント：<textarea v-model="content" cols="70" rows="14" required></textarea></p>
@@ -11,6 +15,7 @@
 <script>
 import firebase from "firebase/app";
 import "firebase/firestore";
+import typeMap from "../../plugins/typeMap.js"
 
 export default {
     props: {
@@ -20,6 +25,7 @@ export default {
     },
     data(){
         return{
+            type: "",
             name: "",
             commenter: "",
             content: "",
@@ -28,6 +34,7 @@ export default {
     methods: {
         onSubmit() {
             let post = {
+                "type": this.type,
                 "commenter": this.commenter,
                 "content": this.content,
                 "time": firebase.firestore.Timestamp.now(),
@@ -62,6 +69,9 @@ export default {
                     console.error("ログインしていません")
                 }
             });
+        },
+        types() {
+            return typeMap
         },
         isReply(){
             return this.destId !== void 0;

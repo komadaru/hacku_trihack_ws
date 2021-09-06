@@ -1,6 +1,6 @@
 <template>
     <div class="post">
-        <p><span v-if="isReply()">Re:</span>
+        <p><span v-if="isReply()">(Re)</span><span :class="postTypeClass(post.type)">{{ post.type }}</span>
         {{ n }} {{ post.commenter }} {{ format(post.time) }}
         <a href="javascript:void 0" @click="switchForm" class="reply">返信</a>
         </p>
@@ -27,6 +27,7 @@
 
 <script>
 import PostForm from "./PostForm.vue"
+import typeMap from "../../plugins/typeMap.js"
 const moment = require("moment")
 
 export default {
@@ -65,6 +66,12 @@ export default {
                 return "▲返信(" + nReplys +")を非表示"
             }
             return "▼返信(" + nReplys + ")を表示"
+        },
+        postTypeClass(type) {
+            if (type in typeMap) {
+                return typeMap[type]
+            }
+            return "unknown-type"
         },
         switchForm() {
             this.showsForm = !this.showsForm
@@ -142,5 +149,38 @@ export default {
 
     .reply {
         color: inherit;
+    }
+
+    /*タイプ*/
+    .agree {
+        color: orangered;
+    }
+
+    .agree::before {
+        content: "〇";
+    }
+
+    .disagree {
+        color: mediumblue;
+    }
+
+    .disagree::before {
+        content: "✖";
+    }
+
+    .comment-type::before {
+        content: "💬"
+    }
+
+    .report::before {
+        content: "ℹ"
+    }
+
+    .question::before {
+        content: "Q."
+    }
+
+    .answer::before {
+        content: "A."
     }
 </style>
