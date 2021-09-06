@@ -19,8 +19,8 @@ export default {
             // ユーザーと投票の対応表を作る
             let userVotes = [];
             for (let reply of this.post.replys) {
-                if (this.vote.choices.includes(reply.type)){
-                    userVotes.push([reply.commenter, reply.type]);
+                if (this.vote.choices.includes(reply.choice)){
+                    userVotes.push([reply.commenter, reply.choice]);
                 }
             }
             // 一人n票なので後ろからn票を採用する

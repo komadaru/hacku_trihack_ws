@@ -5,12 +5,15 @@
             <option :value="choice" v-for="choice in vote.choices" :key="choice">{{choice}}</option>
             </select>
         </label>
-        <label>タイプ：<select v-model="type" required>
+        <label v-else>タイプ：<select v-model="type" required>
             <option :value="key" v-for="(t,key) in types()" :key="key">{{key}}</option>
             </select>
+        </label>
+        <label>
             <span v-if="isReply()">返信先：{{ destPath }} 
             <button type="button" @click="deleteForm" onclick="return false">返信をキャンセル</button></span>
-         名前：{{ name }}</label>
+         名前：{{ name }}
+         </label>
         <label>コメント：<textarea v-model="content" cols="70" rows="14" required></textarea></label>
         <input type="submit">
     </form>
@@ -30,11 +33,11 @@ export default {
     },
     data(){
         return{
-            type: "",
+            type: "コメント",
             name: "",
             commenter: "",
             content: "",
-            voteChoice: "",
+            voteChoice: "賛成",
         }
     },
     methods: {

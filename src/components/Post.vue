@@ -1,8 +1,19 @@
 <template>
     <div :class="['post-wrapper',{'vote':post.section==='vote'}]">
     <div class="post">
-        <p><span v-if="isReply()">(Re)</span><span :class="postTypeClass(post.type)">{{ post.type }}</span>
-        {{ n }} {{ post.commenterName }} {{ format(post.time) }}
+        <p>
+            <span v-if="isReply()">
+                <span v-if="post.section!='vote'">(投票)</span>
+                <span v-else>(Re)</span>
+            </span>
+            <span v-if="post.choice!==void 0" :class="['choice', postTypeClass(post.choice)]">
+                {{post.choice}}</span>
+            <span v-else :class="['type', postTypeClass(post.type)]">
+                {{ post.type }}</span>
+            <span class="path">コメントNo: ({{ path }}) </span>
+            <span class="commenterName">コメントした人:{{ post.commenterName }}</span>
+        </p>
+        <p>{{ format(post.time) }}
         <a href="javascript:void 0" @click="switchForm" class="reply">返信</a>
         </p>
         <p>{{ post.content }}</p>
@@ -19,7 +30,7 @@
     <!--返信を再帰的に呼び出し-->
     <transition @before-enter="beforeEnter" @enter="enter" @after-enter="afterEnter"
      @before-leave="beforeLeave" @leave="leave" @after-leave="afterLeave">
-    <ul class="replys" v-if="showsReply">
+    <ul class="replys" v-show="showsReply">
         <li v-for="(rPost, index) in post.replys" :key="index">
             <Post :n="index + 1" :post="rPost" :disId ="disId"
                 :path="path + '/' + (index + 1)"
@@ -165,6 +176,12 @@ export default {
     }
 
     /*タイプ*/
+    .type, .choice {
+        border: solid 0.1rem;
+    }
+    .choice::after {
+        content: "🗳"
+    }
     .agree {
         color: orangered;
     }
