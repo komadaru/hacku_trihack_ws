@@ -24,7 +24,7 @@
 </template>
 
 <script>
-//import firebase from "firebase/app"
+import firebase from "firebase/app"
 import Topbar from '@/components/layouts/Topbar'
 export default {
   async created() {
