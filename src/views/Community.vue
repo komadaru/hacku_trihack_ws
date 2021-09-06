@@ -20,20 +20,27 @@
         </div>
         <div id="member" class="tab-pane" role="tabpanel" aria-labelledby="member-tab">
             <div class="col" v-for="member in membersList" :key="member">
-                <router-link :to="{ path: '/community', query: { com_id: index}}">
+                <router-link class='link' :to="{ path: '/community', query: { com_id: index}}">
                     <h4><strong>{{member}}</strong></h4>
                 </router-link>
             </div>
         </div>
         <div id="contact" class="tab-pane" role="tabpanel" aria-labelledby="discussion-tab">
             <div class="col" v-for="discussion in disList" :key="discussion">
-                <router-link :to="{ path: '/community', query: { com_id: index}}">
+                <router-link class='link' :to="{ path: '/community', query: { com_id: index}}">
                     <h4><strong>{{discussion}}</strong></h4>
                 </router-link>
             </div>
         </div>
     </div>
 </template>
+
+<style>
+.link{
+    text-decoration: none;
+    color: black;
+}
+</style>
 
 <script>
 import firebase from "firebase/app"
