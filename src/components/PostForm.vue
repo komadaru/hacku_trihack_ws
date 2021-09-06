@@ -74,7 +74,7 @@ export default {
             creatingVote: {
                 choices: [""],
                 nChoicesPerPerson: 1,
-                timelimit: Date()
+                timelimit: new Date()
             }
         }
     },
@@ -144,7 +144,7 @@ export default {
             this.creatingVote = {
                 choices: [""],
                 nChoicesPerPerson: 1,
-                timelimit: Date()
+                timelimit: new Date()
             };
         },
         deleteForm() {
