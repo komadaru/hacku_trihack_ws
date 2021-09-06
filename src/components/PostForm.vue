@@ -39,7 +39,7 @@ export default {
             name: "",
             commenter: "",
             content: "",
-            voteChoice: null,
+            voteChoice: void 0,
         }
     },
     methods: {
