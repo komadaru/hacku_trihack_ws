@@ -6,12 +6,30 @@
     <span v-if="tags.length">タグ:
       <span v-for="tag in tags" :key="tag">{{tag}}</span>
     </span> 
-    状態:<span v-if="closed">閉じられました</span></p>
+    状態:
+    <span v-if="closed">
+      クローズされました
+      <button type="button" @click="switchOpen">
+        再度オープンする
+      </button>
+    </span>
+    <span v-else>
+      オープン
+      <button type="button" @click="switchOpen">
+        クローズする
+      </button>
+    </span>
+  </p>
   <p>{{ description }}</p>
   <Board ref="board" :disId="disId" :idUsers="idUsers" v-if="boardOk"></Board>
-  <PostForm ref="form" :disId="disId" @onSubmit="reloadPosts"></PostForm>
+  <PostForm ref="form" :disId="disId" @onSubmit="reloadPosts"
+    v-if="!closed"></PostForm>
   </div>
   <p class="invalid-message" v-else>議論 (id:{{ disId }})は存在しないか、閲覧する権限がありません。</p>
+  <div class="conclusion" v-if="closed">
+    <h2>結論:</h2>
+    <p>{{ conclusion }}</p>
+  </div>
 </div>
 </template>
 
@@ -39,7 +57,8 @@ export default {
       type: "",
       isValid: true,
       idUsers: {},
-      boardOk: false
+      boardOk: false,
+      conclusion: ""
     }
   },
   methods: {
@@ -69,14 +88,24 @@ export default {
         let data = doc.data()
         this.name = data.name
         this.closed = data.closed
-        if (data.tags !== void 0) {this.tags = data.tags}
         this.description = data.description
         this.type = data.type
+        this.closed = data.closed
         this.community = data.community
+        if (data.tags !== void 0) {this.tags = data.tags}
+        if (data.conclusion !== void 0) {this.conclusion = data.conclusion}
       }).catch(() => {this.isValid = false});
     },
     reloadPosts() {
       this.$refs.board.loadPosts()
+    },
+    switchOpen() {
+      let db = firebase.firestore();
+      // 議論の情報を取得
+      let disRef = db.collection("discussions").doc(this.disId);
+      disRef.update({closed: !this.closed}).then(() =>{
+        this.loadDiscuss();
+      });
     }
   },
   created() {
@@ -112,5 +141,10 @@ export default {
 #container {
   max-width: 700px;
   margin: 0 auto;
+}
+
+.conclusion {
+  border: solid 0.1rem;
+  font-size: 2rem;
 }
 </style>
