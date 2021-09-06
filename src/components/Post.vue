@@ -24,9 +24,12 @@
             <a href="javascript:void 0" @click="switchReply">{{ switchingMessage() }}</a>
         </p>
     </div>
+    <transition @before-enter="beforeEnter" @enter="enter" @after-enter="afterEnter"
+     @before-leave="beforeLeave" @leave="leave" @after-leave="afterLeave">
     <PostForm v-if="showsForm" :destPath="path" :replyingVote="post.vote"
      :disId="disId" :destId="post.id" @deleted="switchForm"
      @onSubmit="$emit('onFormSubmit')"></PostForm>
+    </transition>
     <!--返信を再帰的に呼び出し-->
     <transition @before-enter="beforeEnter" @enter="enter" @after-enter="afterEnter"
      @before-leave="beforeLeave" @leave="leave" @after-leave="afterLeave">
