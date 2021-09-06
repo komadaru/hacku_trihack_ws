@@ -12,15 +12,14 @@
 export default {
     props: {
         post: Object,
-        choices: Array,
-        nChoicesPerPerson: Number
+        vote: Object
     },
     methods: {
         voteResults() {
             // ユーザーと投票の対応表を作る
             let userVotes = [];
             for (let reply of this.post.replys) {
-                if (this.choices.includes(reply.type)){
+                if (this.vote.choices.includes(reply.type)){
                     userVotes.push([reply.commenter, reply.type]);
                 }
             }
@@ -34,7 +33,7 @@ export default {
                     return el[0] === vote[0];
                 }).length
                 // 有効、無効を振り分ける
-                if (nVoted < this.nChoicesPerPerson) {
+                if (nVoted < this.vote.nChoicesPerPerson) {
                     validUserVotes.push(vote)
                 } else {
                     invalidUserVotes.push(vote)
@@ -42,7 +41,7 @@ export default {
             }
             // それぞれの票の数を取得する
             let results = {};
-            for (let choice of this.choices) {
+            for (let choice of this.vote.choices) {
                 results[choice] = validUserVotes.filter(el => {
                     return el[1] === choice;
                 }).length;

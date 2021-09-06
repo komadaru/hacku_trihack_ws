@@ -7,13 +7,13 @@
         </p>
         <p>{{ post.content }}</p>
         <VoteInfo v-if="post.section==='vote'" :post="post"
-        :choices="['賛成', '反対']" :nChoicesPerPerson="1">
+        :vote="post.vote">
         </VoteInfo>
         <p v-if="hasReply()">
             <a href="javascript:void 0" @click="switchReply">{{ switchingMessage() }}</a>
         </p>
     </div>
-    <PostForm v-if="showsForm" :destPath="path"
+    <PostForm v-if="showsForm" :destPath="path" :vote="post.vote"
      :disId="disId" :destId="post.id" @deleted="switchForm"
      @onSubmit="$emit('onFormSubmit')"></PostForm>
     <!--返信を再帰的に呼び出し-->

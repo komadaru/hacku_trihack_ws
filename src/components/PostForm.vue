@@ -1,12 +1,17 @@
 <template>
     <form id="form" @submit.prevent="onSubmit">
-        <p>タイプ：<select v-model="type" required>
+        <label v-if="vote!==void 0">
+            投票：<select v-model="voteChoice" required>
+            <option :value="choice" v-for="choice in vote.choices" :key="choice">{{choice}}</option>
+            </select>
+        </label>
+        <label>タイプ：<select v-model="type" required>
             <option :value="key" v-for="(t,key) in types()" :key="key">{{key}}</option>
             </select>
             <span v-if="isReply()">返信先：{{ destPath }} 
             <button type="button" @click="deleteForm" onclick="return false">返信をキャンセル</button></span>
-         名前：{{ name }}</p>
-        <p>コメント：<textarea v-model="content" cols="70" rows="14" required></textarea></p>
+         名前：{{ name }}</label>
+        <label>コメント：<textarea v-model="content" cols="70" rows="14" required></textarea></label>
         <input type="submit">
     </form>
 </template>
@@ -20,7 +25,8 @@ export default {
     props: {
         destPath: String,
         destId: String,
-        disId: String
+        disId: String,
+        vote: Object
     },
     data(){
         return{
@@ -28,6 +34,7 @@ export default {
             name: "",
             commenter: "",
             content: "",
+            voteChoice: "",
         }
     },
     methods: {
@@ -37,7 +44,8 @@ export default {
                 "commenter": this.commenter,
                 "content": this.content,
                 "time": firebase.firestore.Timestamp.now(),
-                "parentId": this.destId
+                "parentId": this.destId,
+                "choice": this.voteChoice
                 }
             this.postComment(post);
             this.$emit("onSubmit")
