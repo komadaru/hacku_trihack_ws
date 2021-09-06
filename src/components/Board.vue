@@ -40,6 +40,10 @@ export default {
                     post.id = doc.id; //idをセット
                     post.replys = []; //返信の配列作成
                     post.time = post.time.toDate(); //日付をDate型に変更
+                    if (typeof post.vote !== "undefined") {
+                        // 投票の日付をDate型に変更
+                        post.vote.timelimit = post.vote.timelimit.toDate();
+                    }
                     posts.push(post)
                 }
                 this.posts = this.sortByTime(this.makeTree(posts));
