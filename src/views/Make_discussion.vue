@@ -73,8 +73,9 @@
                         <input class="dpass" type="password" v-model="formdata.dpass" placeholder="パスワードを入力">
                     </div>
                     </label>
-
+                    <label class="make">
                     <input type="submit" value="作成">
+                    </label>
                 </ul>
             </form>
 
@@ -221,6 +222,11 @@
 
     .scope {
         display: block;
+        padding-right: 37px;
+    }
+
+    .make {
+        padding-top: 30px;
         padding-right: 37px;
     }
 </style>
