@@ -42,8 +42,7 @@
             <flatPickr
                 placeholder="期日を入力"
                 :config="{enableTime:true}"
-                v-model="creatingVote.timelimit"
-                @on-change="test">
+                v-model="creatingVote.timelimit">
             </flatPickr>
             </label>
          </div>
