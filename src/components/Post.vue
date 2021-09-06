@@ -24,7 +24,7 @@
             <a href="javascript:void 0" @click="switchReply">{{ switchingMessage() }}</a>
         </p>
     </div>
-    <PostForm v-if="showsForm" :destPath="path" :vote="post.vote"
+    <PostForm v-if="showsForm" :destPath="path" :replyingVote="post.vote"
      :disId="disId" :destId="post.id" @deleted="switchForm"
      @onSubmit="$emit('onFormSubmit')"></PostForm>
     <!--返信を再帰的に呼び出し-->
