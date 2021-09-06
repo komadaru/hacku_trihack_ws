@@ -110,21 +110,20 @@ export default {
     }
   },
   created() {
-    //デバッグ
-    firebase.auth().signInWithEmailAndPassword(
-      "example@example.com", "example")
-    .then((v) => {
-      console.log("ログイン成功 uid:" + v.user.uid)
-      console.log("コメントを初期化しています");
-      this.loadDiscuss().then(() => {
-        this.setIdUsers().then(() => {
-          this.boardOk = true
+    // ログインチェックを待ってから読み込み
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        console.log(user.uid + "でログイン中")
+        this.loadDiscuss().then(() => {
+          this.setIdUsers().then(() => {
+            this.boardOk = true;
+          });
         });
-      });
+      } else {
+        this.isValid = false;
+        console.error("ログインしていません");
+      }
     })
-    .catch(e => console.error("ログイン失敗" + e))
-    //ここまでデバッグ
-
   }
 }
 </script>
