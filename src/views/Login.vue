@@ -1,9 +1,12 @@
 <template>
     <div class="signin">
-        <h1>サインイン</h1>
+        <h2>サインイン</h2>
         <input type="email" placeholder="Eメールアドレス" v-model="email">
         <input type="password" placeholder="パスワード" v-model="password">
         <button @click="login">サインイン</button>
+        <p>アカウント作成はお済みですか？ 
+        <router-link to="./signup">サインアップへ</router-link>
+        </p>
     </div>
 </template>
 
