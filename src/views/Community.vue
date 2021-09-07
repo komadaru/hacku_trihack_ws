@@ -1,5 +1,4 @@
 <template>
-    <topbar />
 
     <h1>{{myComList["name"]}}</h1>
     <ul id="myTab" class="nav nav-tabs nav-justified mb-3" role="tablist">
@@ -44,7 +43,6 @@
 
 <script>
 import firebase from "firebase/app"
-import Topbar from '@/components/layouts/Topbar'
 export default {
   async created() {
     this.com_id = this.$route.query.com_id;
@@ -119,9 +117,6 @@ export default {
     disList: [
 
     ],
-  }),
-  components: {
-    Topbar
-  }
+  })
 }
 </script>

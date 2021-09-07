@@ -32,11 +32,20 @@ export default {
             firebase.auth().createUserWithEmailAndPassword(this.email, this.password)
                 .then(user => {
                     alert('Created accout: ', user.email)
+                    this.createdoc();
                     this.$router.push('/')
                 })
                 .catch(error => {
                     alert(error.message)
                 })
+        },        
+        createdoc() {
+            let userData = {
+                biography: "プロフィールが書かれていません。",
+                name: this.id
+            }
+            var db = firebase.firestore();
+            db.collection('users').doc(this.id).set(userData)
         },
     }
 }

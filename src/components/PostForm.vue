@@ -1,54 +1,103 @@
 <template>
-    <form id="form" @submit.prevent="onSubmit">
-        <label v-if="isVote()">
-            投票：<select v-model="voteChoice" required>
-                <option :value="choice" v-for="choice in replyingVote.choices" :key="choice">{{choice}}</option>
-            </select>
-        </label>
-        <label v-else>
-            タイプ：
-            <select v-model="type" required>
-                <option :value="key" v-for="(t,key) in types()" :key="key">{{key}}</option>
-            </select>
-        </label>
-        <label>
-            <span v-if="isReply()">返信先：{{ destPath }} 
-            <button type="button" @click="deleteForm" onclick="return false">返信をキャンセル</button></span>
-         名前：{{ name }}
-         </label>
+    <form class="card card-body border-dark" @submit.prevent="onSubmit">
+        <div class="row">
+            <div class="mb-3 col" v-if="isVote()">
+                <label class="form-label">投票：
+                <select v-model="voteChoice" class="form-select" required>
+                    <option :value="choice" v-for="choice in replyingVote.choices" :key="choice">{{choice}}</option>
+                </select>
+            </label>
+            </div>
+            <div class="mb-3 col" v-else>
+            <label class="form-label">タイプ：
+                <select v-model="type" class="form-select" required>
+                    <option :value="key" v-for="(t,key) in types()" :key="key">{{key}}</option>
+                </select>
+            </label>
+            </div>
+            <div class="mb-3 col" v-if="isReply()">
+                <span>返信先：#({{ destPath }}) 
+                <button 
+                    type="button"
+                    @click="deleteForm"
+                    onclick="return false"
+                    class="btn btn-warning">
+                    返信をキャンセル</button>
+                </span>
+            </div>
+            <div class="mb-3 col">
+            <label class="form-label">名前：
+                <input 
+                    type="text" 
+                    class="form-control"
+                    v-model="name" 
+                    readonly>
+            </label>
+            </div>
+        </div>
          <div v-if="type==='投票'">
             <h3>投票作成</h3>
-            <div>選択肢：
-                <p 
+                <label class="form-label">選択肢：
+                <div 
                     v-for="(choice, index) in creatingVote.choices"
-                    :key="index">
-                    <input type="text" v-model="creatingVote.choices[index]">
+                    :key="choice"
+                    class="input-group mb-3">
+                    <input type="text"
+                        v-model="creatingVote.choices[index]"
+                        class="form-control">
                     <button 
                         type="button"
+                        class="btn btn-primary"
                         @click="addChoicesInput"
                         v-if="index==creatingVote.choices.length - 1">
                         追加
                     </button>
-                </p>
+                    <button 
+                        type="button"
+                        class="btn btn-warning"
+                        @click="creatingVote.choices.splice(index, 1)"
+                        v-else>
+                        削除
+                    </button>
+                </div>
+                <p class="form-text">空欄は無視されます</p>
+                </label>
+            <div class="row">
+                <div class="col">
+                <label class="form-label">一人が投票できる回数：
+                    <input
+                        type="number"
+                        v-model="creatingVote.nChoicesPerPerson"
+                        class="form-control">
+                </label>
+                </div>
+                <div class="col">
+                <label class="form-label">
+                    期日：
+                <flatPickr
+                    placeholder="期日を入力"
+                    :config="{enableTime:true}"
+                    v-model="creatingVote.timelimit"
+                    class="form-control">
+                </flatPickr>
+                </label>
+                </div>
             </div>
-            <label>一人が投票できる回数：
-                <input
-                    type="number"
-                    v-model="creatingVote.nChoicesPerPerson">
-            </label>
-            <br/>
-            <label>
-                期日：
-            <flatPickr
-                placeholder="期日を入力"
-                :config="{enableTime:true}"
-                v-model="creatingVote.timelimit">
-            </flatPickr>
-            </label>
          </div>
-        <label>コメント：<textarea v-model="content" cols="70" rows="14" required></textarea></label>
-        <input type="submit">
-        <button type="button" @click="clear">すべてクリア</button>
+        <div class="mb-3 row">
+        <label class="form-label">コメント：
+            <textarea 
+                v-model="content"
+                class="form-control mb-3 mx-auto"
+                rows="11"
+                required>
+            </textarea>
+        </label>
+        </div>
+        <div class="mb-3">
+            <input type="submit" class="btn btn-primary">
+            <button type="button" class="btn btn-danger" @click="clear">すべてクリア</button>
+        </div>
     </form>
 </template>
 
@@ -146,7 +195,9 @@ export default {
         types() {
             let ret = {...typeMap}
             if (this.isReply()) {
+                // 返信ではクローズと投票は選べない
                 delete ret["クローズ"]
+                delete ret["投票"]
             }
             return ret
         },
@@ -158,7 +209,6 @@ export default {
         },
         clear() {
             this.type = "コメント";
-            this.commenter = "";
             this.content = "";
             this.voteChoice = void 0;
             this.creatingVote = {
@@ -184,7 +234,7 @@ export default {
 
 <style scoped>
     form {
-        border: solid 0.1rem black;
+        /*border: solid 0.1rem black;*/
     }
 
     textarea {

@@ -1,5 +1,4 @@
 <template>
-    <topbar />
     <div>
         <div class="mt-3">
             <img class = "bd-placeholder-imag rounded-circle" v-bind:src = "img" width="100" height="100">
@@ -15,7 +14,6 @@
 import firebase from 'firebase/app'
 import 'firebase/firestore'
 import 'firebase/auth'
-import Topbar from '@/components/layouts/Topbar'
 export default {
   data(){
     return{
@@ -23,9 +21,6 @@ export default {
       name:"",
       biography:"",
     }
-  },
-  components: {
-    Topbar
   },
   created(){
     let db = firebase.firestore();
