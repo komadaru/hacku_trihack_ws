@@ -4,7 +4,7 @@
         <div class="collapse navbar-collapse" id="Navbar">
           <ul class="navbar-nav me-auto mb-2 mb-md-0">
             <li class="nav-item">
-              <router-link class="routerLink" :to="{ path: '/prof'}">
+              <router-link class="routerLink" :to="{ path: '/user/' + uid}">
                 <a class="nav-link active">プロフィール</a>
               </router-link>
             </li>
@@ -24,6 +24,26 @@
     </nav>
   </header>
 </template>
+
+<script>
+import firebase from "firebase/app";
+
+export default {
+  data() {
+    return {
+      uid: "",
+    }
+  },
+  created() {
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        this.uid = user.uid
+      }
+    });
+  }
+}
+</script>
+
 
 <style>
 .routerLink{
