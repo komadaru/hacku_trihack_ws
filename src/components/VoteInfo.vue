@@ -56,7 +56,6 @@ export default {
             }
             // 無効票の数も載せておく
             results["無効票"] = invalidUserChoices.length;
-            console.log(results)
             return results;
         },
         finalChoice() {
