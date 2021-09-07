@@ -35,55 +35,12 @@
       </label>
       </div>
     </div>
-     <div v-if="type==='投票'">
-      <h3>投票作成</h3>
-        <label class="form-label">選択肢：
-        <div 
-          v-for="(choice, index) in creatingVote.choices"
-          :key="choice"
-          class="input-group mb-3">
-          <input type="text"
-            v-model="creatingVote.choices[index]"
-            class="form-control">
-          <button 
-            type="button"
-            class="btn btn-primary"
-            @click="addChoicesInput"
-            v-if="index==creatingVote.choices.length - 1">
-            追加
-          </button>
-          <button 
-            type="button"
-            class="btn btn-warning"
-            @click="creatingVote.choices.splice(index, 1)"
-            v-else>
-            削除
-          </button>
-        </div>
-        <p class="form-text">空欄は無視されます</p>
-        </label>
-      <div class="row">
-        <div class="col">
-        <label class="form-label">一人が投票できる回数：
-          <input
-            type="number"
-            v-model="creatingVote.nChoicesPerPerson"
-            class="form-control">
-        </label>
-        </div>
-        <div class="col">
-        <label class="form-label">
-          期日：
-        <flatPickr
-          placeholder="期日を入力"
-          :config="{enableTime:true}"
-          v-model="creatingVote.timelimit"
-          class="form-control">
-        </flatPickr>
-        </label>
-        </div>
-      </div>
-     </div>
+    <VoteForm 
+      v-if="type==='投票'"
+      v-model:choices="creatingVote.choices"
+      v-model:nChoicesPerPerson="creatingVote.nChoicesPerPerson"
+      v-model:timelimit="creatingVote.timelimit"></VoteForm>
+    <button type="button" @click="test(creatingVote)">test</button>
     <div class="mb-3 row">
     <label class="form-label">コメント：
       <textarea 
@@ -104,8 +61,9 @@
 <script>
 import firebase from "firebase/app";
 import "firebase/firestore";
+import moment from "moment";
 import typeMap from "../../plugins/typeMap.js"
-import flatPickr from 'vue-flatpickr-component';
+import VoteForm from "./VoteForm.vue"
 
 export default {
   props: {
@@ -115,7 +73,7 @@ export default {
     replyingVote: Object
   },
   components: {
-    flatPickr
+    VoteForm
   },
   data(){
     return{
@@ -125,9 +83,9 @@ export default {
       content: "",
       voteChoice: void 0,
       creatingVote: {
-        choices: [""],
+        choices: "",
         nChoicesPerPerson: 1,
-        timelimit: new Date()
+        timelimit: moment().format("YYYY-MM-DD HH:mm")
       }
     }
   },
@@ -147,8 +105,11 @@ export default {
         post.vote.timelimit
           = firebase.firestore.Timestamp.fromDate(
             new Date(post.vote.timelimit))
-        // 空文字を除去
-        post.vote.choices = post.vote.choices.filter((el) => {return el !== ""})
+        // 改行で分割したリストにする（空文字は消す）
+        post.vote.choices = post.vote.choices.split(/\r\n|\n/)
+        post.vote.choices = post.vote.choices.filter(el => {
+          return el != "";
+        });
       }
       this.postComment(post);
       this.$emit("onSubmit")
@@ -212,18 +173,16 @@ export default {
       this.content = "";
       this.voteChoice = void 0;
       this.creatingVote = {
-        choices: [""],
+        choices: "",
         nChoicesPerPerson: 1,
-        timelimit: new Date()
+        timelimit: moment().format("YYYY-MM-DD HH:mm")
       };
     },
     deleteForm() {
       this.$emit("deleted")
     },
-    addChoicesInput() {
-      if (!this.creatingVote.choices.includes("")) {
-        this.creatingVote.choices.push('')
-      }
+    test(s) {
+      console.log(s)
     }
   },
   created() {
