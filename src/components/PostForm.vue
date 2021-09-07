@@ -209,7 +209,6 @@ export default {
         },
         clear() {
             this.type = "コメント";
-            this.commenter = "";
             this.content = "";
             this.voteChoice = void 0;
             this.creatingVote = {
