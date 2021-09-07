@@ -4,8 +4,8 @@
         <p>期日：{{ vote.timelimit }}({{timeLeft()}})</p>
         <p>状態：{{ state() }}</p>
         <p>返信して投票してください</p>
-        <p v-for="(count, choice) in voteResults()" :key="choice">
-            {{ choice }}：{{ count }}票
+        <p v-for="result in voteResults()" :key="result.choice">
+            {{ result.choice }}：{{ result.count }}票
         </p>
         <p v-if="isFinished()">結果:{{ finalChoice() }}</p>
     </div>
@@ -48,14 +48,21 @@ export default {
                 }
             }
             // それぞれの票の数を取得する
-            let results = {};
+            let results = [];
             for (let choice of this.vote.choices) {
-                results[choice] = validUserChoices.filter(el => {
+                let result = {};
+                result.choice = choice
+                result.count = validUserChoices.filter(el => {
                     return el[1] === choice;
                 }).length;
+                results.push(result)
             }
             // 無効票の数も載せておく
-            results["無効票"] = invalidUserChoices.length;
+            results.push({
+                choice: "無効票",
+                count: invalidUserChoices.length
+                })
+            console.log(results)
             return results;
         },
         finalChoice() {
