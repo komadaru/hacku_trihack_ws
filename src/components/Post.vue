@@ -183,6 +183,7 @@ export default {
     /*タイプ*/
     .type, .choice {
         border: solid 0.1rem;
+        border-radius: 15%;
     }
     .choice::after {
         content: "🗳"
