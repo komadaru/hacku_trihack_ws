@@ -1,9 +1,7 @@
 <template>
     <div class="post-wrapper">
-    <div :class="['post card',
-        {'border-info':post.type==='投票' || isVoteChoice()}]">
-            <div :class="['card-header',
-                {'bg-info':post.type==='投票'}]">
+    <div :class="['post card',{'border-info':isBorderColored()}]">
+            <div :class="['card-header',{'bg-info':isBgColored()}]">
             <div class="row">
                 <p class="col mb-1">
                 <span v-if="isReply()">
@@ -40,8 +38,8 @@
     </div>
     <transition @before-enter="beforeEnter" @enter="enter" @after-enter="afterEnter"
      @before-leave="beforeLeave" @leave="leave" @after-leave="afterLeave">
-    <PostForm v-if="showsForm" :destPath="path" :replyingVote="post.vote"
-     :disId="disId" :destId="post.id" @deleted="switchForm"
+    <PostForm v-if="showsForm" :destPath="path" :replyingPost="post"
+     :disId="disId" @deleted="switchForm"
      @onSubmit="$emit('onFormSubmit')"></PostForm>
     </transition>
     <!--返信を再帰的に呼び出し-->
@@ -92,6 +90,17 @@ export default {
         },
         isVoteChoice() {
             return typeof this.post.voteChoice !== "undefined";
+        },
+        isIdea() {
+            return this.isReply() && this.post.parent.type !== "アイデア出し";
+        },
+        isBgColored() {
+            return this.post.type==='投票' || this.isVoteChoice()
+                || this.post.type==='アイデア募集' || this.isIdea();
+        },
+        isBorderColored() {
+            return this.post.type==='投票' || this.isVoteChoice()
+                || this.post.type==='アイデア募集' || this.isIdea();
         },
         showsReplyDefalut() {
             /* 親のpostが存在し、それが投票ならば

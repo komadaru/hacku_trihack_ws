@@ -1,6 +1,7 @@
 <template>
   <form class="card card-body border-dark" @submit.prevent="onSubmit">
     <div class="row">
+      <!--投票の時-->
       <div class="mb-3 col" v-if="isVote()">
         <label class="form-label">投票：
         <select v-model="voteChoice" class="form-select" required>
@@ -8,6 +9,12 @@
         </select>
       </label>
       </div>
+      <!--アイデア出しの時-->
+      <div class="mb-3 col" v-if="isIdea()">
+        <p class="form-text">アイデア出し</p>
+        <p class="form-text">1行1アイデア。空行は無視されます</p>
+      </div>
+      <!--それ以外のとき-->
       <div class="mb-3 col" v-else>
       <label class="form-label">タイプ：
         <select v-model="type" class="form-select" required>
@@ -15,6 +22,7 @@
         </select>
       </label>
       </div>
+      <!--送信先情報と返信のキャンセルボタン-->
       <div class="mb-3 col" v-if="isReply()">
         <span>返信先：#({{ destPath }}) 
         <button 
@@ -35,12 +43,16 @@
       </label>
       </div>
     </div>
+    <!--投票の作成とアイデア募集の作成-->
     <VoteForm 
       v-if="type==='投票'"
       v-model:choices="creatingVote.choices"
       v-model:nChoicesPerPerson="creatingVote.nChoicesPerPerson"
       v-model:timelimit="creatingVote.timelimit"></VoteForm>
-    <button type="button" @click="test(creatingVote)">test</button>
+    <IdeaForm
+      v-else-if="type==='アイデア募集'"
+      v-model:timelimit="ideaEvent.timelimit"></IdeaForm>
+    <!--コメントの中身-->
     <div class="mb-3 row">
     <label class="form-label">コメント：
       <textarea 
@@ -51,6 +63,7 @@
       </textarea>
     </label>
     </div>
+    <!--送信ボタンと取り消しボタン-->
     <div class="mb-3">
       <input type="submit" class="btn btn-primary">
       <button type="button" class="btn btn-danger" @click="clear">すべてクリア</button>
@@ -64,16 +77,17 @@ import "firebase/firestore";
 import moment from "moment";
 import typeMap from "../../plugins/typeMap.js"
 import VoteForm from "./VoteForm.vue"
+import IdeaForm from "./IdeaForm.vue"
 
 export default {
   props: {
     destPath: String,
-    destId: String,
     disId: String,
-    replyingVote: Object
+    replyingPost: Object
   },
   components: {
-    VoteForm
+    VoteForm,
+    IdeaForm
   },
   data(){
     return{
@@ -86,6 +100,9 @@ export default {
         choices: "",
         nChoicesPerPerson: 1,
         timelimit: moment().format("YYYY-MM-DD HH:mm")
+      },
+      ideaEvent: {
+        timelimit: moment().format("YYYY-MM-DD HH:mm")
       }
     }
   },
@@ -96,8 +113,8 @@ export default {
         "commenter": this.commenter,
         "content": this.content,
         "time": firebase.firestore.Timestamp.now(),
-        "parentId": this.destId,
-        "voteChoice": this.voteChoice
+        "parentId": this.replyingPost.id,
+        "voteChoice": this.voteChoice,
         }
       if (this.type === "投票") {
         post.vote = this.creatingVote;
@@ -110,6 +127,12 @@ export default {
         post.vote.choices = post.vote.choices.filter(el => {
           return el != "";
         });
+      } else if (this.type === "アイデア募集") {
+        post.ideaEvent = this.ideaEvent;
+        // Timestamp型に変換
+        post.ideaEvent.timelimit
+          = firebase.firestore.Timestamp.fromDate(
+            new Date(post.ideaEvent.timelimit))
       }
       this.postComment(post);
       this.$emit("onSubmit")
@@ -156,17 +179,21 @@ export default {
     types() {
       let ret = {...typeMap}
       if (this.isReply()) {
-        // 返信ではクローズと投票は選べない
+        // 返信ではクローズと投票とアイデア募集は選べない
         delete ret["クローズ"]
         delete ret["投票"]
+        delete ret["アイデア募集"]
       }
       return ret
     },
     isReply(){
-      return typeof this.destId !== "undefined";
+      return typeof this.replyingPost !== "undefined";
     },
     isVote() {
-      return typeof this.replyingVote !== "undefined";
+      return this.isReply() && typeof this.replyingPost.vote !== "undefined";
+    },
+    isIdea() {
+      return this.isReply() && typeof this.replyingPost.ideaEvent !== "undefined";
     },
     clear() {
       this.type = "コメント";
@@ -177,6 +204,9 @@ export default {
         nChoicesPerPerson: 1,
         timelimit: moment().format("YYYY-MM-DD HH:mm")
       };
+      this.ideaEvent = {
+        timelimit: moment().format("YYYY-MM-DD HH:mm")
+      }
     },
     deleteForm() {
       this.$emit("deleted")

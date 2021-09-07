@@ -1,5 +1,5 @@
 <template>
-    <div class="vote-info card border-info">
+    <div class="idea-info card border-info">
         <h2 class="card-header bg-info">アイデア募集セクション</h2>
         <div class="card-body">
         <p>期日：{{ format(ideaEvent.timelimit) }}({{timeLeft()}})</p>
@@ -28,13 +28,20 @@ export default {
     },
     methods: {
         getIdeas() {
-            let results = [];
-            for (let reply of this.post.replys) {
-                results.push(...reply.ideas)
-            }
-            let ideas = [];
-            results.forEach((result, index) => {
-                ideas.push({id: index, idea: result})
+            // 有効なリプライを抽出
+            let validReplys = this.post.replys.filter((reply) => {
+                return reply.time < new Date();
+            });
+            // 全てのリプライの中身を取得して改行で分割、
+            // 空文字を除去した配列を返す
+            let ideas = validReplys.map((reply) => {
+                let content = reply.content;
+                let words = content.split(/\r\n|\n/)
+                return words.filter((word) => {return word != ""})
+            });
+            ideas = ideas.flat();
+            ideas = ideas.map((result, index) => {
+                return {id: index, idea: result}
             });
             return ideas;
         },
