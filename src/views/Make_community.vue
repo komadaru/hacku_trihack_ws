@@ -5,7 +5,7 @@
         <p>説明：<input type="text" v-model="description" placeholder="任意"></p>
         <p>追加するアカウントのID(UID)：</p>
         <ul class="uid-inputs">
-            <li v-for="(addingUid, index) in addingUids" :key="index">
+            <li v-for="(addingUid, index) in addingUids" :key="addingUid">
                 <input type="text" v-model="addingUids[index]">
             </li>
         </ul>
