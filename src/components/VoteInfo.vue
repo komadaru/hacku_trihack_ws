@@ -4,7 +4,7 @@
         <p>期日：{{ vote.timelimit }}({{timeLeft()}})</p>
         <p>状態：{{ state() }}</p>
         <p>返信して投票してください</p>
-        <p v-for="(count, choice) in voteResults()" :key="count">
+        <p v-for="(count, choice) in voteResults()" :key="choice">
             {{ choice }}：{{ count }}票
         </p>
         <p v-if="isFinished()">結果:{{ finalChoice() }}</p>
@@ -22,40 +22,41 @@ export default {
     methods: {
         voteResults() {
             // ユーザーと投票の対応表を作る
-            let userVotes = [];
+            let userChoices = [];
             for (let reply of this.post.replys) {
                 if (this.vote.choices.includes(reply.voteChoice)){
-                    userVotes.push(
+                    userChoices.push(
                         [reply.commenter, reply.voteChoice, reply.time]
                     );
                 }
             }
             // 一人n票なので後ろからn票を採用する
-            userVotes.reverse()
-            let validUserVotes = [];
-            let invalidUserVotes = [];
-            for (let vote of userVotes) {
+            userChoices.reverse()
+            let validUserChoices = [];
+            let invalidUserChoices = [];
+            for (let vote of userChoices) {
                 // ユーザーが既に集計されている数を求める
-                let nVoted = validUserVotes.filter(el => {
+                let nVoted = validUserChoices.filter(el => {
                     return el[0] === vote[0];
                 }).length
                 // 有効、無効を振り分ける
                 if (nVoted < this.vote.nChoicesPerPerson
                     && vote[2] < this.vote.timelimit) {
-                    validUserVotes.push(vote)
+                    validUserChoices.push(vote)
                 } else {
-                    invalidUserVotes.push(vote)
+                    invalidUserChoices.push(vote)
                 }
             }
             // それぞれの票の数を取得する
             let results = {};
             for (let choice of this.vote.choices) {
-                results[choice] = validUserVotes.filter(el => {
+                results[choice] = validUserChoices.filter(el => {
                     return el[1] === choice;
                 }).length;
             }
             // 無効票の数も載せておく
-            results["無効票"] = invalidUserVotes.length;
+            results["無効票"] = invalidUserChoices.length;
+            console.log(results)
             return results;
         },
         finalChoice() {
