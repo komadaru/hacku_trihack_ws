@@ -17,7 +17,6 @@ export default {
     name: 'Login',
     data() {
         return {
-            id: '',
             email: '',
             password: ''
         }
@@ -28,7 +27,6 @@ export default {
                 // eslint-disable-next-line no-unused-vars
                 result => {
                     this.id = result.user.uid;
-                    this.createdoc();
                     alert('Success!')
                     this.$router.push('/user/' + result.user.uid)
                 },
@@ -36,15 +34,6 @@ export default {
                     alert(err.message)
                 }
             )
-        },
-        createdoc() {
-            let userData = {
-                id: this.id,
-                email: this.email,
-                password: this.password,
-            }
-            var db = firebase.firestore();
-            db.collection('users').doc(this.id).set(userData)
         },
     }
 }
