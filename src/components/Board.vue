@@ -44,6 +44,10 @@ export default {
                         // 投票の日付をDate型に変更
                         post.vote.timelimit = post.vote.timelimit.toDate();
                     }
+                    if (typeof post.ideaEvent !== "undefined") {
+                        // アイデア募集の日付をDate型に変更
+                        post.ideaEvent.timelimit = post.ideaEvent.timelimit.toDate();
+                    }
                     posts.push(post)
                 }
                 this.posts = this.sortByTime(this.makeTree(posts));

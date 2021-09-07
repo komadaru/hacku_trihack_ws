@@ -8,6 +8,7 @@ const typeMap = {
     "質問": "question",
     "解答": "answer",
     "投票": "vote",
+    "アイデア募集": "ideaEvent",
     "クローズ": "close"
 }
 

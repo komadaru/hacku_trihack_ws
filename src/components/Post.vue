@@ -1,9 +1,7 @@
 <template>
     <div class="post-wrapper">
-    <div :class="['post card',
-        {'border-info':post.type==='投票' || isVoteChoice()}]">
-            <div :class="['card-header',
-                {'bg-info':post.type==='投票'}]">
+    <div :class="['post card',{'border-info':isBorderColored()}]">
+            <div :class="['card-header',{'bg-info':isBgColored()}]">
             <div class="row">
                 <p class="col mb-1">
                 <span v-if="isReply()">
@@ -31,14 +29,17 @@
         <VoteInfo v-if="post.type==='投票'" :post="post"
         :vote="post.vote">
         </VoteInfo>
+        <IdeaInfo v-else-if="post.type==='アイデア募集'" :post="post"
+        :ideaEvent="post.ideaEvent">
+        </IdeaInfo>
         <span v-if="hasReply()" class="switch-reply">
             <button class="btn btn-link" @click="switchReply">{{ switchingMessage() }}</button>
         </span>
     </div>
     <transition @before-enter="beforeEnter" @enter="enter" @after-enter="afterEnter"
      @before-leave="beforeLeave" @leave="leave" @after-leave="afterLeave">
-    <PostForm v-if="showsForm" :destPath="path" :replyingVote="post.vote"
-     :disId="disId" :destId="post.id" @deleted="switchForm"
+    <PostForm v-if="showsForm" :destPath="path" :replyingPost="post"
+     :disId="disId" @deleted="switchForm"
      @onSubmit="$emit('onFormSubmit')"></PostForm>
     </transition>
     <!--返信を再帰的に呼び出し-->
@@ -56,10 +57,11 @@
 </template>
 
 <script>
-import PostForm from "./PostForm.vue"
-import VoteInfo from "./VoteInfo.vue"
-import typeMap from "../../plugins/typeMap.js"
-const moment = require("moment")
+import PostForm from "./PostForm.vue";
+import VoteInfo from "./VoteInfo.vue";
+import IdeaInfo from "./IdeaInfo.vue";
+import typeMap from "../../plugins/typeMap.js";
+import moment from "moment";
 
 export default {
     props: {
@@ -70,7 +72,8 @@ export default {
     emits: ["onFormSubmit"],
     components: {
         PostForm,
-        VoteInfo
+        VoteInfo,
+        IdeaInfo
     },
     data(){
         return{
@@ -87,6 +90,17 @@ export default {
         },
         isVoteChoice() {
             return typeof this.post.voteChoice !== "undefined";
+        },
+        isIdea() {
+            return this.isReply() && this.post.parent.type !== "アイデア出し";
+        },
+        isBgColored() {
+            return this.post.type==='投票' || this.isVoteChoice()
+                || this.post.type==='アイデア募集' || this.isIdea();
+        },
+        isBorderColored() {
+            return this.post.type==='投票' || this.isVoteChoice()
+                || this.post.type==='アイデア募集' || this.isIdea();
         },
         showsReplyDefalut() {
             /* 親のpostが存在し、それが投票ならば
