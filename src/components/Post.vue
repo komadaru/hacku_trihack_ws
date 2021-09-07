@@ -1,28 +1,39 @@
 <template>
-    <div :class="['post-wrapper',{'vote-section':post.type==='投票'}]">
-    <div class="post">
-        <p>
-            <span v-if="isReply()">
-                <span v-if="isVote()">(投票)</span>
-                <span v-else>(Re)</span>
-            </span>
-            <span v-if="isVote()" :class="['choice', postTypeClass(post.voteChoice)]">
-                {{post.voteChoice}}</span>
-            <span v-else :class="['type', postTypeClass(post.type)]">
-                {{ post.type }}</span>
-            <span class="path">コメントNo: ({{ path }}) </span>
-            <span class="commenterName">コメントした人:{{ post.commenterName }}</span>
-        </p>
-        <p>{{ format(post.time) }}
-        <a href="javascript:void 0" @click="switchForm" class="reply">返信</a>
-        </p>
-        <p>{{ post.content }}</p>
+    <div class="post-wrapper">
+    <div :class="['post card',
+        {'border-info':post.type==='投票' || isVoteChoice()}]">
+            <div :class="['card-header',
+                {'bg-info':post.type==='投票'}]">
+            <div class="row">
+                <p class="col mb-1">
+                <span v-if="isReply()">
+                    <span v-if="isVoteChoice()">(投票)</span>
+                    <span v-else>(Re)</span>
+                </span>
+                <span v-if="isVoteChoice()" :class="['choice', postTypeClass(post.voteChoice)]">
+                    {{post.voteChoice}}</span>
+                <span v-else :class="['type', postTypeClass(post.type)]">
+                    {{ post.type }}</span>
+                <span class="path"> #({{ path }}) </span>
+                </p>
+                <p class="col mb-1">{{ format(post.time) }}
+                    <a 
+                        type="button"
+                        @click="switchForm" 
+                        class="reply btn btn-secondary
+                            btn-sm stretched-link">
+                    返信</a>
+                </p>
+            </div>
+            <p class="commenterName mb-0">by {{ post.commenterName }}</p>
+        </div>
+        <p class="card-body">{{ post.content }}</p>
         <VoteInfo v-if="post.type==='投票'" :post="post"
         :vote="post.vote">
         </VoteInfo>
-        <p v-if="hasReply()">
-            <a href="javascript:void 0" @click="switchReply">{{ switchingMessage() }}</a>
-        </p>
+        <span v-if="hasReply()" class="switch-reply">
+            <button class="btn btn-link" @click="switchReply">{{ switchingMessage() }}</button>
+        </span>
     </div>
     <transition @before-enter="beforeEnter" @enter="enter" @after-enter="afterEnter"
      @before-leave="beforeLeave" @leave="leave" @after-leave="afterLeave">
@@ -69,12 +80,12 @@ export default {
     },
     methods: {
         format(time) {
-            return moment(time).format("YYYY-MM-DD HH:mm:ss");
+            return moment(time).format("YYYY/MM/DD HH:mm:ss");
         },
         isReply() {
             return typeof this.post.parentId !== "undefined";
         },
-        isVote() {
+        isVoteChoice() {
             return typeof this.post.voteChoice !== "undefined";
         },
         showsReplyDefalut() {
@@ -129,8 +140,11 @@ export default {
 
 <style scoped>
     .post {
-        border: solid 0.1rem black;
         margin: 1rem auto;
+    }
+
+    .switch-reply {
+        z-index: 1;
     }
 
     li {
@@ -143,13 +157,13 @@ export default {
         content: "";
         border-left: solid 0.1rem black;
         width: 10px;
-        height: calc(100% + 1.25em);
-        top: 0;
+        height: calc(100% + .25em + 1rem);
+        top: -1rem;
         left: -1em;
     }
 
     li:last-child::before {
-        height: 2rem;
+        height: 3rem;
     }
 
     li::after {
@@ -175,14 +189,14 @@ export default {
         transition: height .4s ease-in-out, opacity .2s ease-in-out;
     }
 
-    .reply {
-        color: inherit;
-    }
-
     /*タイプ*/
     .type, .choice {
         border: solid 0.1rem;
         border-radius: 15%;
+        font-size: 0.9rem;
+        padding: 0.2rem;
+        margin-right: 0.7em;
+
     }
     .choice::after {
         content: "🗳"
@@ -227,11 +241,5 @@ export default {
     }
     .close::before {
         content: "✓"
-    }
-
-    /*セクション*/
-    .vote-section {
-        border: solid 0.1rem;
-        background: paleturquoise;
     }
 </style>

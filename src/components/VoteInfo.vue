@@ -1,13 +1,20 @@
 <template>
-    <div class="vote-info">
-        <h2>投票セクション</h2>
-        <p>期日：{{ vote.timelimit }}({{timeLeft()}})</p>
+    <div class="vote-info card border-info">
+        <h2 class="card-header bg-info">投票セクション</h2>
+        <div class="card-body">
+        <p>期日：{{ format(vote.timelimit) }}({{timeLeft()}})</p>
         <p>状態：{{ state() }}</p>
-        <p>返信して投票してください</p>
-        <p v-for="result in voteResults()" :key="result.choice">
+        <p class="text-muted">返信して投票してください</p>
+        <ul class="list-group">
+        <li 
+            v-for="result in voteResults()"
+            :key="result.choice"
+            :class="['list-group-item', {'disabled':result.choice==='無効票'}]">
             {{ result.choice }}：{{ result.count }}票
-        </p>
+        </li>
+        </ul>
         <p v-if="isFinished()">結果:{{ finalChoice() }}</p>
+        </div>
     </div>
 </template>
 
@@ -62,8 +69,10 @@ export default {
                 choice: "無効票",
                 count: invalidUserChoices.length
                 })
-            console.log(results)
             return results;
+        },
+        format(time) {
+            return moment(time).format("YYYY/MM/DD HH:mm");
         },
         finalChoice() {
             let result = this.voteResults()
@@ -121,7 +130,4 @@ export default {
 </script>
 
 <style>
-.vote-info {
-    border: solid 0.1rem
-}
 </style>
