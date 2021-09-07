@@ -29,6 +29,7 @@ export default {
             description: "",
             addingUids: [""],
             message: "",
+            currentUid: ""
         }
     },
     methods: {
@@ -59,12 +60,11 @@ export default {
                     }
                 }
                 if (allUserExists) {
-                    let currentUser = firebase.auth().currentUser
                     // Firestoreのコミュニティcollectionに追加
                     let newCommunity = {
                         name: self.comName,
                         description: self.description,
-                        users: self.addingUids.concat(currentUser.uid),
+                        users: self.addingUids.concat(this.currentUid),
                         discussions: []
                     };
                     col = db.collection("communities");
@@ -78,10 +78,13 @@ export default {
     },
     created() {
         //デバッグ用
-        firebase.auth().signInWithEmailAndPassword(
-            "example@example.com", "example")
-            .then(value => console.log("（デバッグ）ログインしました:" + value))
-            .catch(e => console.error("（デバッグ）ログインに失敗しました:" + e))
+        firebase.auth().onAuthStateChanged((user) => {
+            if (user) {
+                this.currentUid = user.uid;
+            } else {
+                console.error("ログインしていません")
+            }
+        });
     }
 }
 </script>
