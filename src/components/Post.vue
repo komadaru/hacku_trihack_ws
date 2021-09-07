@@ -31,6 +31,9 @@
         <VoteInfo v-if="post.type==='投票'" :post="post"
         :vote="post.vote">
         </VoteInfo>
+        <IdeaInfo v-else-if="post.type==='アイデア募集'" :post="post"
+        :ideaEvent="post.ideaEvent">
+        </IdeaInfo>
         <span v-if="hasReply()" class="switch-reply">
             <button class="btn btn-link" @click="switchReply">{{ switchingMessage() }}</button>
         </span>
@@ -58,6 +61,7 @@
 <script>
 import PostForm from "./PostForm.vue"
 import VoteInfo from "./VoteInfo.vue"
+import IdeaInfo from "./IdeaInfo.vue"
 import typeMap from "../../plugins/typeMap.js"
 const moment = require("moment")
 
@@ -70,7 +74,8 @@ export default {
     emits: ["onFormSubmit"],
     components: {
         PostForm,
-        VoteInfo
+        VoteInfo,
+        IdeaInfo
     },
     data(){
         return{
