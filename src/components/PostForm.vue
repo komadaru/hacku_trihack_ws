@@ -1,5 +1,5 @@
 <template>
-    <form id="form" @submit.prevent="onSubmit">
+    <form class="card card-body border-dark" @submit.prevent="onSubmit">
         <div class="row">
             <div class="mb-3 col" v-if="isVote()">
                 <label class="form-label">投票：
@@ -16,7 +16,7 @@
             </label>
             </div>
             <div class="mb-3 col" v-if="isReply()">
-                <span>返信先：{{ destPath }} 
+                <span>返信先：#({{ destPath }}) 
                 <button 
                     type="button"
                     @click="deleteForm"
@@ -234,7 +234,7 @@ export default {
 
 <style scoped>
     form {
-        border: solid 0.1rem black;
+        /*border: solid 0.1rem black;*/
     }
 
     textarea {
