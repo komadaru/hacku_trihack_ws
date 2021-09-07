@@ -1,5 +1,4 @@
 <template>
-  <topbar />
   
   <div class="row row-cols-1 row-cols-md-5 p-3 g-4">
     <div class="col" v-for="(data, index) in myComList" :key="data">
@@ -25,7 +24,6 @@
 
 <script>
 import firebase from "firebase/app"
-import Topbar from '@/components/layouts/Topbar'
 export default {
   async created() {
     const communities = firebase.firestore().collection("communities")
@@ -88,9 +86,6 @@ export default {
     membersList: [
 
     ],
-  }),
-  components: {
-    Topbar
-  }
+  })
 }
 </script>

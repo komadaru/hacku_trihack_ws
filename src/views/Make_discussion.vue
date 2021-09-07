@@ -3,7 +3,6 @@
         <title>Making discussion</title>
     </head>
     <body>
-        <topbar />
         <div class="main">
             <h1>議論を作成</h1>
             <form @submit.prevent="submit">
@@ -90,8 +89,6 @@
     // Import outside library from main.js
     import flatPickr from 'vue-flatpickr-component';
 
-    import Topbar from '@/components/layouts/Topbar';
-
     import firebase from "firebase/app";
 
     export default {
@@ -119,8 +116,7 @@
             }
         },
         components: {
-            flatPickr,
-            Topbar,
+            flatPickr
         },
         // For flatPickr: 現在日時を継続的に更新
         mounted: function() {

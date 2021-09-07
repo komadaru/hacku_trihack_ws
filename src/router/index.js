@@ -6,9 +6,7 @@ import User from '../views/User.vue'
 import Community from '../views/Community.vue'
 import Make_discussion from '../views/Make_discussion.vue'
 import Discussion from '../views/Discussion.vue'
-import Prof from '../views/Prof.vue'
 import ComList from '../views/ComList.vue'
-import Firstpage from '../views/Firstpage.vue'
 
 
 const routes = [
@@ -21,11 +19,6 @@ const routes = [
     path: '/signup',
     name: 'Signup',
     component: Signup
-  },
-  {
-    path: '/mypage',
-    name: 'Mypage',
-    component: User
   },
   {
     path: '/user/:userId',
@@ -56,17 +49,7 @@ const routes = [
     path: '/comlist',
     name: 'ComList',
     component: ComList
-  },
-  {
-    path: '/prof',
-    name: 'Prof',
-    component: Prof
-  },
-  {
-    path: '/firstpage',
-    name: 'firstpage',
-    component: Firstpage
-  },
+  }
 ]
 
 const router = createRouter({

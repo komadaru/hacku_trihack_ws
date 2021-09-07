@@ -1,8 +1,18 @@
 <template>
   <div id="nav">
   </div>
+  <topbar v-if="$route.path!=='/'&&$route.path!=='/signup'"/>
   <router-view/>
 </template>
+
+<script>
+import Topbar from '@/components/layouts/Topbar'
+export default {
+  components: {
+    Topbar
+  }
+}
+</script>
 
 <style>
 #app {
