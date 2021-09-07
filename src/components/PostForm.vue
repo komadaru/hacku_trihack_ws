@@ -113,9 +113,11 @@ export default {
         "commenter": this.commenter,
         "content": this.content,
         "time": firebase.firestore.Timestamp.now(),
-        "parentId": this.replyingPost.id,
         "voteChoice": this.voteChoice,
-        }
+      }
+      if (this.isReply()) {
+        post.parentId = this.replyingPost.id
+      }
       if (this.type === "投票") {
         post.vote = this.creatingVote;
         // Timestamp型に変換
