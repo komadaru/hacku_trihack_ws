@@ -6,6 +6,7 @@
         <div class="info">
             <h1 class="mt-2">{{name}}</h1>
             <p>{{biography}}</p>
+            <p>{{uid}}</p>
         </div>
     </div>
 </template>
@@ -20,6 +21,7 @@ export default {
       img:"",
       name:"",
       biography:"",
+      uid:"",
     }
   },
   created(){
@@ -29,6 +31,7 @@ export default {
         if (doc.exists) {
         this.name = doc.data().name
         this.biography = doc.data().biography
+        this.uid=doc.id
     } else {
         // doc.data() will be undefined in this case
         console.log("No such document!");
