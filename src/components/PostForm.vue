@@ -5,7 +5,7 @@
       <div class="mb-3 col" v-if="isVote()">
         <label class="form-label">投票：
         <select v-model="voteChoice" class="form-select" required>
-          <option :value="choice" v-for="choice in replyingVote.choices" :key="choice">{{choice}}</option>
+          <option :value="choice" v-for="choice in replyingPost.vote.choices" :key="choice">{{choice}}</option>
         </select>
       </label>
       </div>
