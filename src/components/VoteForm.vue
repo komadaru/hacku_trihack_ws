@@ -25,7 +25,7 @@
         期日：
       <flatPickr
         placeholder="期日を入力"
-        :config="{enableTime:true}"
+        :config="config"
         :modelValue="timelimit"
         @input="$emit('update:timelimit', $event.target.value)"
         class="form-control">
@@ -40,6 +40,15 @@
 import flatPickr from 'vue-flatpickr-component';
 
 export default {
+  data() {
+    return {
+      config: {
+        enableTime: true,
+        dateFormat: "Y-m-d H:i",
+        minDate: null,
+      }
+    }
+  },
   components: {
     flatPickr
   },
@@ -48,8 +57,16 @@ export default {
     nChoicesPerPerson: Number,
     timelimit: String
   },
+  mounted() {
+            this.updateTime();
+            setInterval(this.updateTime, 1000);
+        },
   methods: {
-
+    updateTime() {
+                let currentdate = new Date()
+                this.config.minDate = currentdate.getFullYear() + '-' + (currentdate.getMonth() + 1) + '-' +
+                currentdate.getDate() + ' ' + currentdate.getHours() + ':' + (currentdate.getMinutes() + 1)
+    },
   }
   
 }

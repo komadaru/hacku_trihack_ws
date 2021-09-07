@@ -126,7 +126,7 @@
         methods: {
             // For flatPickr: 現在日時の1分後を取得し、flatPickerの要素minDateに代入
             updateTime() {
-                let currentdate= new Date()
+                let currentdate = new Date()
                 this.config.minDate = currentdate.getFullYear() + '-' + (currentdate.getMonth() + 1) + '-' +
                 currentdate.getDate() + ' ' + currentdate.getHours() + ':' + (currentdate.getMinutes() + 1)
             },
