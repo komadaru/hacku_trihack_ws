@@ -35,7 +35,7 @@
      @before-leave="beforeLeave" @leave="leave" @after-leave="afterLeave">
     <ul class="replys" v-show="showsReply">
         <li v-for="(rPost, index) in post.replys" :key="index">
-            <Post :n="index + 1" :post="rPost" :disId ="disId"
+            <Post :post="rPost" :disId ="disId"
                 :path="path + '/' + (index + 1)"
                 @onFormSubmit="$emit('onFormSubmit')">
             </Post>
@@ -52,7 +52,6 @@ const moment = require("moment")
 
 export default {
     props: {
-        n: Number,
         disId: String,
         post: Object,
         path: String

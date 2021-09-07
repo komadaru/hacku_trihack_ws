@@ -1,7 +1,7 @@
 <template>
     <ul>
         <li v-for="(post, index) in posts" :key="index">
-            <Post :n="index + 1" :post="post" :disId="disId"
+            <Post :post="post" :disId="disId"
                 :path="(index + 1).toString()"
                 @onFormSubmit="loadPosts">
             </Post>
