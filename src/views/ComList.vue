@@ -28,6 +28,13 @@ import firebase from "firebase/app"
 import Topbar from '@/components/layouts/Topbar'
 export default {
   async created() {
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        this.uid = user.uid
+      }
+    })
+    console.log(this.uid)
+
     const communities = firebase.firestore().collection("communities")
     const comData = await communities.get()
     comData.forEach(doc => {
@@ -69,7 +76,7 @@ export default {
     })
   },
   data: () => ({
-    myId: "3iBbPkXJEKb8AqTkYQxfD9UUKsV2",
+    uid: '',
     idList: [
 
     ],
