@@ -40,7 +40,7 @@
                 <label class="form-label">選択肢：
                 <div 
                     v-for="(choice, index) in creatingVote.choices"
-                    :key="index"
+                    :key="choice"
                     class="input-group mb-3">
                     <input type="text"
                         v-model="creatingVote.choices[index]"
