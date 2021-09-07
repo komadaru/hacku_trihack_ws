@@ -57,11 +57,11 @@
 </template>
 
 <script>
-import PostForm from "./PostForm.vue"
-import VoteInfo from "./VoteInfo.vue"
-import IdeaInfo from "./IdeaInfo.vue"
-import typeMap from "../../plugins/typeMap.js"
-const moment = require("moment")
+import PostForm from "./PostForm.vue";
+import VoteInfo from "./VoteInfo.vue";
+import IdeaInfo from "./IdeaInfo.vue";
+import typeMap from "../../plugins/typeMap.js";
+import moment from "moment";
 
 export default {
     props: {
