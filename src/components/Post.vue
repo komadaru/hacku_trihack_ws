@@ -34,7 +34,7 @@
     <transition @before-enter="beforeEnter" @enter="enter" @after-enter="afterEnter"
      @before-leave="beforeLeave" @leave="leave" @after-leave="afterLeave">
     <ul class="replys" v-show="showsReply">
-        <li v-for="(rPost, index) in post.replys" :key="rPost">
+        <li v-for="(rPost, index) in post.replys" :key="rPost.id">
             <Post :post="rPost" :disId ="disId"
                 :path="path + '/' + (index + 1)"
                 @onFormSubmit="$emit('onFormSubmit')">

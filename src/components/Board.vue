@@ -1,6 +1,6 @@
 <template>
     <ul>
-        <li v-for="(post, index) in posts" :key="post">
+        <li v-for="(post, index) in posts" :key="post.id">
             <Post :post="post" :disId="disId"
                 :path="(index + 1).toString()"
                 @onFormSubmit="loadPosts">
