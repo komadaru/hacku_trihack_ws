@@ -21,7 +21,11 @@
     </span>
   </p>
   <p>{{ description }}</p>
-  <Board ref="board" :disId="disId" :idUsers="idUsers" v-if="boardOk"></Board>
+  <Board ref="board" 
+    :disId="disId"
+    :idUsers="idUsers"
+    :userRoles="userRoles"
+    v-if="boardOk"></Board>
   <PostForm ref="form" :disId="disId" @onSubmit="reloadPosts"
     @onClosed="loadDiscuss"
     v-if="!closed"></PostForm>
@@ -58,6 +62,7 @@ export default {
       type: "",
       isValid: true,
       idUsers: new Map(),
+      userRoles: new Map(),
       boardOk: false,
       conclusion: ""
     }
@@ -79,6 +84,18 @@ export default {
             this.idUsers.set(d.id, d.data());
           }
         })
+      })
+    },
+    setUserRoles() {
+      let db = firebase.firestore();
+      let disRef = db.collection("discussions").doc(this.disId);
+      return disRef.get().then((doc) => {
+        if ("userRoles" in doc.data()) {
+          let dbMap = doc.data().userRoles;
+          for (let user of dbMap) {
+            this.userRoles.set(user.uid, user.role)
+          }
+        }
       })
     },
     loadDiscuss() {
@@ -116,7 +133,9 @@ export default {
         console.log(user.uid + "でログイン中")
         this.loadDiscuss().then(() => {
           this.setIdUsers().then(() => {
-            this.boardOk = true;
+            this.setUserRoles().then(() => {
+              this.boardOk = true;
+            });
           });
         });
       } else {
