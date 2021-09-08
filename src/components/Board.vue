@@ -68,11 +68,11 @@ export default {
         },
         makeTree(posts) {
             for (let post of posts){
-                if (typeof post.parentId !== "undefined") {
+                if ("parentId" in post) {
                     post.parent = posts.find((p) => {
                         return p.id == post.parentId;
                     });
-                    if (typeof post.parent !== "undefined") {
+                    if ("parent" in post) {
                         post.parent.replys.push(post);
                     } else {
                         delete post.parentId;
@@ -80,7 +80,7 @@ export default {
                 }
             }
             posts = posts.filter((post) => {
-                return typeof post.parentId === "undefined"
+                return !("parentId" in post);
             })
             return posts
         },

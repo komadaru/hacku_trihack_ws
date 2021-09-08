@@ -91,10 +91,10 @@ export default {
       return moment(time).format("YYYY/MM/DD HH:mm:ss");
     },
     isReply() {
-      return typeof this.post.parentId !== "undefined";
+      return "parentId" in this.post;
     },
     isVoteChoice() {
-      return typeof this.post.voteChoice !== "undefined";
+      return "voteChoice" in this.post;
     },
     isIdea() {
       return this.isReply() && this.post.parent.type !== "アイデア出し";
@@ -108,10 +108,8 @@ export default {
         || this.post.type==='アイデア募集' || this.isIdea();
     },
     showsReplyDefalut() {
-      /* 親のpostが存在し、それが投票ならば
-      デフォルトで表示しない*/
-      let hasParent = typeof this.post.parent !== "undefined";
-      return !(hasParent && this.post.parent.type === "投票")
+      // これが投票に対するリプライならばこれへのリプライはデフォルトで表示しない
+      return !(this.isReply() && this.post.parent.type === "投票")
     },
     hasReply() {
       return this.post.replys.length != 0;

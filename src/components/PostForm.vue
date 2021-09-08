@@ -192,10 +192,10 @@ export default {
       return typeof this.replyingPost !== "undefined";
     },
     isVote() {
-      return this.isReply() && typeof this.replyingPost.vote !== "undefined";
+      return this.isReply() && "vote" in this.replyingPost;
     },
     isIdea() {
-      return this.isReply() && typeof this.replyingPost.ideaEvent !== "undefined";
+      return this.isReply() && "ideaEvent" in this.replyingPost;
     },
     clear() {
       this.type = "コメント";
