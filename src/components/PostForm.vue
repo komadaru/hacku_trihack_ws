@@ -107,7 +107,8 @@ export default {
       },
       ideaEvent: {
         timelimit: moment().format("YYYY-MM-DD HH:mm")
-      }
+      },
+      myRole: ""
     }
   },
   methods: {
@@ -175,12 +176,26 @@ export default {
           this.commenter = user.uid
           firebase.firestore().collection("users")
             .doc(this.commenter).get()
-            .then((doc) => this.name = doc.data().name)
+            .then((doc) => {
+              this.name = doc.data().name
+              this.setMyRole()
+              })
             .catch(() => this.name = "ユーザー名が取得できません")
         } else {
           console.error("ログインしていません")
         }
       });
+    },
+    setMyRole(){
+      let db = firebase.firestore();
+      let disRef = db.collection("discussions").doc(this.disId);
+      return disRef.get().then((doc) => {
+        if ("userRoles" in doc.data()) {
+          let dbMap = doc.data().userRoles;
+          this.myRole = dbMap.find((user) => 
+            user.uid === this.commenter).role
+        }
+      })
     },
     types() {
       let ret = new Map(typeMap)
@@ -188,6 +203,17 @@ export default {
         // 返信ではクローズと投票とアイデア募集は選べない
         let invalidsIfReply = ["close", "vote", "ideaEvent"]
         invalidsIfReply.forEach((invalid) => ret.delete(invalid))
+      }
+      if (typeof this.myRole !== "undefined") {
+        // 自分の役割があれば、賛成と反対系、アイデア募集を消し、役割を追加する
+        let invalidsIfReply = ["agree", "disagree",
+                               "conditional-agree",
+                               "conditional-disagree",
+                               "ideaEvent"]
+        invalidsIfReply.forEach((invalid) => {ret.delete(invalid)})
+        let temp = new Map(ret)
+        ret = new Map([["role", this.myRole]])
+        temp.forEach((value, key) => ret.set(key, value))
       }
       return ret
     },
