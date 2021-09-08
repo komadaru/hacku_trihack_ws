@@ -57,7 +57,7 @@ export default {
       closed: false,
       type: "",
       isValid: true,
-      idUsers: {},
+      idUsers: new Map(),
       boardOk: false,
       conclusion: ""
     }
@@ -76,7 +76,7 @@ export default {
         }
         Promise.all(promises).then((docs) => {
           for (let d of docs) {
-            this.idUsers[d.id] = d.data();
+            this.idUsers.set(d.id, d.data());
           }
         })
       })

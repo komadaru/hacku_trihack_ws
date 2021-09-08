@@ -16,7 +16,7 @@ import Post from './Post.vue'
 export default {
     props: {
         disId: String,
-        idUsers: Object
+        idUsers: Object // Map Object
     },
     data() {
         return {
@@ -36,7 +36,7 @@ export default {
             postsRef.get().then((snapshot) => {
                 for (let doc of snapshot.docs) {
                     let post = doc.data();
-                    post.commenterName = this.idUsers[post.commenter].name;
+                    post.commenterName = this.idUsers.get(post.commenter).name;
                     post.id = doc.id; //idをセット
                     post.replys = []; //返信の配列作成
                     post.time = post.time.toDate(); //日付をDate型に変更
