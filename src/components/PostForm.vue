@@ -152,7 +152,7 @@ export default {
       col.add(postData)
       .then((docRef) => {
         console.log("コメントを送信しました", docRef.id)
-        if (postData.type === "クローズ") {
+        if (postData.type === "close") {
           this.closeDiscuss(postData);
         }
       })
