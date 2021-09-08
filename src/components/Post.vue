@@ -8,10 +8,18 @@
           <span v-if="isVoteChoice()">(投票)</span>
           <span v-else>(Re)</span>
         </span>
-        <span v-if="isVoteChoice()" :class="voteChoiceClassList()">
-          {{post.voteChoice}}</span>
-        <span v-else :class="['type', post.type]">
-          {{ typeString(post.type) }}</span>
+        <span 
+          v-if="isVoteChoice()"
+          :class="['choice'].concat(
+            stringToClasses(post.voteChoice))">
+          {{post.voteChoice}}
+        </span>
+        <span 
+          v-else 
+          :class="['type', post.type].concat(
+            stringToClasses(typeString(post.type)))">
+          {{ typeString(post.type) }}
+        </span>
         <span class="path"> #({{ path }}) </span>
         </div>
         <div class="col mb-1">{{ format(post.time) }}
@@ -111,11 +119,11 @@ export default {
       return this.post.type==='vote' || this.isVoteChoice()
         || this.post.type==='ideaEvent' || this.isIdea();
     },
-    voteChoiceClassList() {
-      let ret = ['choice'];
+    stringToClasses(string) {
+      let ret = [];
       // 特定の文字列が含まれる場合対応するクラスを付与
       for (let key of classMap.keys()) {
-        if (this.post.voteChoice.includes(key)) {
+        if (string.includes(key)) {
           ret.push(classMap.get(key))
         }
       }
@@ -139,8 +147,12 @@ export default {
       return "▼返信(" + nReplys + ")を表示"
     },
     typeString(type) {
+      // タイプに対応する文字列（"comment-type"に対する"コメント"など）
       if (typeMap.has(type)) {
         return typeMap.get(type);
+      } else if (type === "role") {
+        // 役割の場合役割の名前にする
+        return this.post.commenter.role
       }
       return "?不明なタイプ?"
     },
