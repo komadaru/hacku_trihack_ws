@@ -8,10 +8,10 @@
           <span v-if="isVoteChoice()">(投票)</span>
           <span v-else>(Re)</span>
         </span>
-        <span v-if="isVoteChoice()" :class="['choice', postTypeClass(post.voteChoice)]">
+        <span v-if="isVoteChoice()" :class="['choice', post.voteChoice]">
           {{post.voteChoice}}</span>
-        <span v-else :class="['type', postTypeClass(post.type)]">
-          {{ post.type }}</span>
+        <span v-else :class="['type', post.type]">
+          {{ typeString(post.type) }}</span>
         <span class="path"> #({{ path }}) </span>
         </div>
         <div class="col mb-1">{{ format(post.time) }}
@@ -31,10 +31,10 @@
       </div>
     </div>
     <p class="card-body">{{ post.content }}</p>
-    <VoteInfo v-if="post.type==='投票'" :post="post"
+    <VoteInfo v-if="post.type==='vote'" :post="post"
     :vote="post.vote">
     </VoteInfo>
-    <IdeaInfo v-else-if="post.type==='アイデア募集'" :post="post"
+    <IdeaInfo v-else-if="post.type==='ideaEvent'" :post="post"
     :ideaEvent="post.ideaEvent">
     </IdeaInfo>
     <span v-if="hasReply()" class="switch-reply">
@@ -100,16 +100,16 @@ export default {
       return this.isReply() && this.post.parent.type !== "アイデア出し";
     },
     isBgColored() {
-      return this.post.type==='投票' || this.isVoteChoice()
-        || this.post.type==='アイデア募集' || this.isIdea();
+      return this.post.type==='vote' || this.isVoteChoice()
+        || this.post.type==='ideaEvent' || this.isIdea();
     },
     isBorderColored() {
-      return this.post.type==='投票' || this.isVoteChoice()
-        || this.post.type==='アイデア募集' || this.isIdea();
+      return this.post.type==='vote' || this.isVoteChoice()
+        || this.post.type==='ideaEvent' || this.isIdea();
     },
     showsReplyDefalut() {
       // これが投票に対するリプライならばこれへのリプライはデフォルトで表示しない
-      return !(this.isReply() && this.post.parent.type === "投票")
+      return !(this.isReply() && this.post.parent.type === "vote")
     },
     hasReply() {
       return this.post.replys.length != 0;
@@ -124,11 +124,11 @@ export default {
       }
       return "▼返信(" + nReplys + ")を表示"
     },
-    postTypeClass(type) {
-      if (type in typeMap) {
-        return typeMap[type]
+    typeString(type) {
+      if (typeMap.has(type)) {
+        return typeMap.get(type);
       }
-      return "unknown-type"
+      return "?不明なタイプ?"
     },
     switchForm() {
       this.showsForm = !this.showsForm
@@ -223,19 +223,19 @@ export default {
   .choice::after {
     content: "🗳"
   }
-  .agree {
+  .agree .conditional-agree {
     color: orangered;
   }
 
-  .agree::before {
+  .agree::before .conditional-agree::before {
     content: "〇";
   }
 
-  .disagree {
+  .disagree .conditional-disagree {
     color: mediumblue;
   }
 
-  .disagree::before {
+  .disagree::before .conditional-disagree::before {
     content: "✖";
   }
 

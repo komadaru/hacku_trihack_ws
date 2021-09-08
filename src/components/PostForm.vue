@@ -18,7 +18,11 @@
       <div class="mb-3 col" v-else>
       <label class="form-label">タイプ：
         <select v-model="type" class="form-select" required>
-          <option :value="key" v-for="(t,key) in types()" :key="key">{{key}}</option>
+          <option 
+            :value="key" 
+            v-for="[key, value] in types()" 
+            :key="key">
+          {{value}}</option>
         </select>
       </label>
       </div>
@@ -45,12 +49,12 @@
     </div>
     <!--投票の作成とアイデア募集の作成-->
     <VoteForm 
-      v-if="type==='投票'"
+      v-if="type==='vote'"
       v-model:choices="creatingVote.choices"
       v-model:nChoicesPerPerson="creatingVote.nChoicesPerPerson"
       v-model:timelimit="creatingVote.timelimit"></VoteForm>
     <IdeaForm
-      v-else-if="type==='アイデア募集'"
+      v-else-if="type==='ideaEvent'"
       v-model:timelimit="ideaEvent.timelimit"></IdeaForm>
     <!--コメントの中身-->
     <div class="mb-3 row">
@@ -91,7 +95,7 @@ export default {
   },
   data(){
     return{
-      type: "コメント",
+      type: "comment-type",
       name: "",
       commenter: "",
       content: "",
@@ -118,7 +122,7 @@ export default {
       if (this.isReply()) {
         post.parentId = this.replyingPost.id
       }
-      if (this.type === "投票") {
+      if (this.type === "vote") {
         post.vote = this.creatingVote;
         // Timestamp型に変換
         post.vote.timelimit
@@ -129,7 +133,7 @@ export default {
         post.vote.choices = post.vote.choices.filter(el => {
           return el != "";
         });
-      } else if (this.type === "アイデア募集") {
+      } else if (this.type === "ideaEvent") {
         post.ideaEvent = this.ideaEvent;
         // Timestamp型に変換
         post.ideaEvent.timelimit
@@ -179,13 +183,13 @@ export default {
       });
     },
     types() {
-      let ret = {...typeMap}
+      let ret = new Map(typeMap)
       if (this.isReply()) {
         // 返信ではクローズと投票とアイデア募集は選べない
-        delete ret["クローズ"]
-        delete ret["投票"]
-        delete ret["アイデア募集"]
+        let invalidsIfReply = ["close", "vote", "ideaEvent"]
+        invalidsIfReply.forEach((invalid) => ret.delete(invalid))
       }
+      console.log(ret)
       return ret
     },
     isReply(){
@@ -198,7 +202,7 @@ export default {
       return this.isReply() && "ideaEvent" in this.replyingPost;
     },
     clear() {
-      this.type = "コメント";
+      this.type = "comment-type";
       this.content = "";
       this.voteChoice = void 0;
       this.creatingVote = {
