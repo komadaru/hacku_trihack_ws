@@ -36,7 +36,9 @@ export default {
             postsRef.get().then((snapshot) => {
                 for (let doc of snapshot.docs) {
                     let post = doc.data();
-                    post.commenterName = this.idUsers.get(post.commenter).name;
+                    let uid = post.commenter
+                    post.commenter = {...this.idUsers.get(post.commenter)};
+                    post.commenter.uid = uid;
                     post.id = doc.id; //idをセット
                     post.replys = []; //返信の配列作成
                     post.time = post.time.toDate(); //日付をDate型に変更

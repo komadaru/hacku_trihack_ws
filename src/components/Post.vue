@@ -26,8 +26,8 @@
       <div class="commenter-name mb-0">
         <router-link 
         class="commenter-name-link"
-        :to="'/user/' + post.commenter">
-        by {{ post.commenterName }}</router-link>
+        :to="'/user/' + post.commenter.uid">
+        by {{ post.commenter.name }}</router-link>
       </div>
     </div>
     <p class="card-body">{{ post.content }}</p>
