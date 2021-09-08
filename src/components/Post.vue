@@ -28,6 +28,9 @@
         class="commenter-name-link"
         :to="'/user/' + post.commenter.uid">
         by {{ post.commenter.name }}</router-link>
+        <span v-if="'role' in post.commenter">
+          ({{ post.commenter.role }})
+        </span>
       </div>
     </div>
     <p class="card-body">{{ post.content }}</p>
