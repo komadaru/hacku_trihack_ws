@@ -10,7 +10,7 @@
       </label>
       </div>
       <!--アイデア出しの時-->
-      <div class="mb-3 col" v-if="isIdea()">
+      <div class="mb-3 col" v-else-if="isIdea()">
         <p class="form-text">アイデア出し</p>
         <p class="form-text">1行1アイデア。空行は無視されます</p>
       </div>
@@ -189,7 +189,6 @@ export default {
         let invalidsIfReply = ["close", "vote", "ideaEvent"]
         invalidsIfReply.forEach((invalid) => ret.delete(invalid))
       }
-      console.log(ret)
       return ret
     },
     isReply(){
