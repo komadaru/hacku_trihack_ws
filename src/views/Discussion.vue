@@ -27,9 +27,9 @@
     v-if="!closed"></PostForm>
   </div>
   <p class="invalid-message" v-else>議論 (id:{{ disId }})は存在しないか、閲覧する権限がありません。</p>
-  <div class="conclusion" v-if="closed">
-    <h2>結論:</h2>
-    <p>{{ conclusion }}</p>
+  <div class="conclusion card mb-3" v-if="closed">
+    <h2 class="card-title card-header bg-success text-white">結論</h2>
+    <p class="card-body">{{ conclusion }}</p>
   </div>
 </div>
 </template>
