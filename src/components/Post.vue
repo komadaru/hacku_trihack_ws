@@ -4,10 +4,12 @@
       <div :class="['card-header',{'bg-info':isBgColored()}]">
       <div class="row">
         <div class="col mb-1">
+        <!--付加情報（票かどうか、返信かどうか）-->
         <span v-if="isReply()">
           <span v-if="isVoteChoice()">(投票)</span>
           <span v-else>(Re)</span>
         </span>
+        <!--バッジ（この投稿は何を主張しているのか）-->
         <span 
           v-if="isVoteChoice()"
           :class="['choice'].concat(
@@ -20,9 +22,12 @@
             stringToClasses(typeString(post.type)))">
           {{ typeString(post.type) }}
         </span>
+        <!--パス（ツリーのインデックスを階層ごとに列挙）-->
         <span class="path"> #({{ path }}) </span>
         </div>
+        <!--投稿時間-->
         <div class="col mb-1">{{ format(post.time) }}
+        <!--返信ボタン-->
           <a 
             type="button"
             @click="switchForm" 
@@ -31,6 +36,7 @@
           返信</a>
         </div>
       </div>
+      <!--投稿者の情報-->
       <div class="commenter-name mb-0">
         <router-link 
         class="commenter-name-link"
@@ -41,17 +47,21 @@
         </span>
       </div>
     </div>
+    <!--本文-->
     <p class="card-body">{{ post.content }}</p>
+    <!--投票またはアイデア募集に関する情報-->
     <VoteInfo v-if="post.type==='vote'" :post="post"
     :vote="post.vote">
     </VoteInfo>
     <IdeaInfo v-else-if="post.type==='ideaEvent'" :post="post"
     :ideaEvent="post.ideaEvent">
     </IdeaInfo>
+    <!--返信のonof-->
     <span v-if="hasReply()" class="switch-reply">
       <button class="btn btn-link" @click="switchReply">{{ switchingMessage() }}</button>
     </span>
   </div>
+  <!--返信用フォーム-->
   <transition @before-enter="beforeEnter" @enter="enter" @after-enter="afterEnter"
    @before-leave="beforeLeave" @leave="leave" @after-leave="afterLeave">
   <PostForm v-if="showsForm" :destPath="path" :replyingPost="post"
