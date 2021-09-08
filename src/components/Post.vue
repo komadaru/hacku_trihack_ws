@@ -3,7 +3,7 @@
     <div :class="['post card',{'border-info':isBorderColored()}]">
             <div :class="['card-header',{'bg-info':isBgColored()}]">
             <div class="row">
-                <p class="col mb-1">
+                <div class="col mb-1">
                 <span v-if="isReply()">
                     <span v-if="isVoteChoice()">(投票)</span>
                     <span v-else>(Re)</span>
@@ -13,17 +13,22 @@
                 <span v-else :class="['type', postTypeClass(post.type)]">
                     {{ post.type }}</span>
                 <span class="path"> #({{ path }}) </span>
-                </p>
-                <p class="col mb-1">{{ format(post.time) }}
+                </div>
+                <div class="col mb-1">{{ format(post.time) }}
                     <a 
                         type="button"
                         @click="switchForm" 
                         class="reply btn btn-secondary
                             btn-sm stretched-link">
                     返信</a>
-                </p>
+                </div>
             </div>
-            <p class="commenterName mb-0">by {{ post.commenterName }}</p>
+            <div class="commenter-name mb-0">
+                <router-link 
+                class="commenter-name-link"
+                :to="'/user/' + post.commenter">
+                by {{ post.commenterName }}</router-link>
+            </div>
         </div>
         <p class="card-body">{{ post.content }}</p>
         <VoteInfo v-if="post.type==='投票'" :post="post"
@@ -155,6 +160,11 @@ export default {
 <style scoped>
     .post {
         margin: 1rem auto;
+    }
+
+    .commenter-name-link {
+        position: relative;
+        z-index: 2;
     }
 
     .switch-reply {
