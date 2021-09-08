@@ -16,7 +16,8 @@ import Post from './Post.vue'
 export default {
     props: {
         disId: String,
-        idUsers: Object // Map Object
+        idUsers: Object, // Map Object
+        userRoles: Object
     },
     data() {
         return {
@@ -35,18 +36,28 @@ export default {
             let posts = [];
             postsRef.get().then((snapshot) => {
                 for (let doc of snapshot.docs) {
+                    // 投稿のデータを取得
                     let post = doc.data();
+                    //idをセット
+                    post.id = doc.id;
+                    // commenterはユーザーを表すオブジェクトに変換
                     let uid = post.commenter
                     post.commenter = {...this.idUsers.get(post.commenter)};
                     post.commenter.uid = uid;
-                    post.id = doc.id; //idをセット
+                    // userRolesが与えられていればrolesを追加
+                    if (typeof this.userRoles !== "undefined") {
+                        if (this.userRoles.has(post.commenter.uid)) {
+                            post.commenter.role
+                                = this.userRoles.get(post.commenter.uid)
+                        }
+                    }
                     post.replys = []; //返信の配列作成
                     post.time = post.time.toDate(); //日付をDate型に変更
-                    if (typeof post.vote !== "undefined") {
+                    if ("vote" in post) {
                         // 投票の日付をDate型に変更
                         post.vote.timelimit = post.vote.timelimit.toDate();
                     }
-                    if (typeof post.ideaEvent !== "undefined") {
+                    if ("ideaEvent" in post) {
                         // アイデア募集の日付をDate型に変更
                         post.ideaEvent.timelimit = post.ideaEvent.timelimit.toDate();
                     }
