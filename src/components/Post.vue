@@ -8,7 +8,7 @@
           <span v-if="isVoteChoice()">(投票)</span>
           <span v-else>(Re)</span>
         </span>
-        <span v-if="isVoteChoice()" :class="['choice', post.voteChoice]">
+        <span v-if="isVoteChoice()" :class="voteChoiceClassList()">
           {{post.voteChoice}}</span>
         <span v-else :class="['type', post.type]">
           {{ typeString(post.type) }}</span>
@@ -66,6 +66,7 @@ import PostForm from "./PostForm.vue";
 import VoteInfo from "./VoteInfo.vue";
 import IdeaInfo from "./IdeaInfo.vue";
 import typeMap from "../../plugins/typeMap.js";
+import classMap from "../../plugins/classMap.js";
 import moment from "moment";
 
 export default {
@@ -106,6 +107,16 @@ export default {
     isBorderColored() {
       return this.post.type==='vote' || this.isVoteChoice()
         || this.post.type==='ideaEvent' || this.isIdea();
+    },
+    voteChoiceClassList() {
+      let ret = ['choice'];
+      // 特定の文字列が含まれる場合対応するクラスを付与
+      for (let key of classMap.keys()) {
+        if (this.post.voteChoice.includes(key)) {
+          ret.push(classMap.get(key))
+        }
+      }
+      return ret;
     },
     showsReplyDefalut() {
       // これが投票に対するリプライならばこれへのリプライはデフォルトで表示しない
@@ -223,19 +234,19 @@ export default {
   .choice::after {
     content: "🗳"
   }
-  .agree .conditional-agree {
+  .agree, .conditional-agree {
     color: orangered;
   }
 
-  .agree::before .conditional-agree::before {
+  .agree::before, .conditional-agree::before {
     content: "〇";
   }
 
-  .disagree .conditional-disagree {
+  .disagree, .conditional-disagree {
     color: mediumblue;
   }
 
-  .disagree::before .conditional-disagree::before {
+  .disagree::before, .conditional-disagree::before {
     content: "✖";
   }
 
