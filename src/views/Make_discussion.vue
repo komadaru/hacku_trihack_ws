@@ -23,6 +23,16 @@
                     <label class="discussiontype">
                         <input type="radio" id="type" name="discussiontype" value="ディベート型" v-model="formdata.type">ディベート型
                     </label>
+                    <div v-show="formdata.type === 'ディベート型'">
+                    <div v-for="(member, index) in formdata.roles" :key="member">
+                    <label class="role">
+                        {{idList[member.uid]}} : 
+                        <input type="radio" :name="'role' + index" value="肯定" v-model="member.role">肯定
+                        <input type="radio" :name="'role' + index" value="否定" v-model="member.role">否定
+                        <input type="radio" :name="'role' + index" value="審判" v-model="member.role">審判
+                    </label>
+                    </div>
+                    </div>
                     <label class="discussiontype">
                         <input type="radio" id="type" name="discussiontype" value="アイデア募集型" v-model="formdata.type">アイデア募集型
                     </label>
@@ -92,8 +102,40 @@
     import firebase from "firebase/app";
 
     export default {
+        async created() {
+            this.id = location.pathname.split("/")[2]
+
+            const communities = firebase.firestore().collection("communities")
+            const comData = await communities.get()
+            comData.forEach(doc => {
+                if (this.id === doc.id){
+                    this.membersId = doc.data().users
+                }
+            })
+
+            const users = firebase.firestore().collection("users")
+            const userData = await users.get()
+            userData.forEach(doc => {
+                this.idList[doc.id] = doc.data().name
+            })
+            
+            this.membersId.forEach(doc => {
+                this.members.push(this.idList[doc])
+                this.formdata.roles.push({uid: doc, role: ""})
+            })
+        },
         data() {
             return {
+                id: '',
+                membersId: [
+
+                ],
+                members: [
+
+                ],
+                idList: {
+
+                },
                 date: null,
                 ideaAmount: 0,
                 comAmount: 0,
@@ -111,7 +153,8 @@
                 formdata: {
                     name: "", description: "", type: "", closeauto: true,
                     timelimit: "", ideaamo: "",
-                    comamo: "", scope: "", dpass: ""
+                    comamo: "", scope: "", dpass: "", roles: [], 
+
                 }
             }
         },
@@ -146,7 +189,8 @@
                             ideaamo: data['ideaamo'],
                             comamo: data['comamo'],
                             scope: data['scope'],
-                            dpass: data['dpass']
+                            dpass: data['dpass'],
+                            userRoles: data['roles']
                         }
                         firebase.firestore().collection(room).add(disData)
                             .then((value) => {
