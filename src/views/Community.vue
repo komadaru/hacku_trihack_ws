@@ -1,5 +1,4 @@
 <template>
-
     <h1><strong>{{com["name"]}}</strong></h1>
     <ul id="myTab" class="nav nav-tabs nav-justified mb-3" role="tablist">
         <li class="nav-item" role="presentation">
@@ -66,6 +65,7 @@ export default {
     comData.forEach(doc => {
       this.comList.push(doc.data())
       this.comIdList.push(doc.id)
+      this.comIdDict[doc.data().name] = doc.id
     })
 
     const users = firebase.firestore().collection("users")
@@ -89,10 +89,9 @@ export default {
 
     this.com = this.myComList[this.com_index]
 
-    this.com_id = this.comIdList[this.com_index]
+    this.com_id = this.comIdDict[this.com.name]
 
     this.disList = this.com.discussions
-
   },
   data: () => ({
     com_index: '',
@@ -100,6 +99,9 @@ export default {
     uid: '',
     com: '',
     idList: {
+
+    },
+    comIdDict: {
 
     },
     comList: [
@@ -123,6 +125,9 @@ export default {
     disList: [
 
     ],
+    disInfo: [
+      
+    ]
   })
 }
 </script>
