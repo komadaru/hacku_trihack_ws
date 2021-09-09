@@ -7,6 +7,9 @@
             <h1 class="mt-2">{{name}}</h1>
             <p>{{biography}}</p>
             <p>{{uid}}</p>
+            <ul>
+              <li v-for = "interest in interests" :key = "interest">{{interest}}</li>
+            </ul>
         </div>
     </div>
 </template>
@@ -22,6 +25,7 @@ export default {
       name:"",
       biography:"",
       uid:"",
+      interests:[],
     }
   },
   created(){
@@ -32,6 +36,7 @@ export default {
         this.name = doc.data().name
         this.biography = doc.data().biography
         this.uid=doc.id
+        this.interests=doc.data().interests
     } else {
         // doc.data() will be undefined in this case
         console.log("No such document!");
