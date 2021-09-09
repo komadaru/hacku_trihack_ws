@@ -101,7 +101,6 @@ export default {
     disData.forEach(doc => {
       this.disInfo.push(doc.data())
     })
-    
   },
   data: () => ({
     com_index: '',
