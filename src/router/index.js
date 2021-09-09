@@ -49,7 +49,7 @@ const routes = [
     path: '/comlist',
     name: 'ComList',
     component: ComList
-  }
+  },
 ]
 
 const router = createRouter({

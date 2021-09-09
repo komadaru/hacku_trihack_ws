@@ -1,4 +1,5 @@
 <template>
+    <img v-bind:src="require('../assets/dplogo.png')">
     <div class="signup">
         <h2>サインアップ</h2>
         <input type="email" placeholder="Eメールアドレス" v-model="email">
@@ -44,6 +45,7 @@ export default {
             var db = firebase.firestore();
             db.collection('users').doc(this.id).set(userData)
         },
+
     }
 }
 </script>

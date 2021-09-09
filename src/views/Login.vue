@@ -1,4 +1,5 @@
 <template>
+    <img v-bind:src="require('../assets/dplogo.png')">
     <div class="signin">
         <h2>サインイン</h2>
         <input type="email" placeholder="Eメールアドレス" v-model="email">
