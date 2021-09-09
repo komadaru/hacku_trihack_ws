@@ -30,7 +30,18 @@
             </div>
           <div class="card-body">
             <p>id：{{user.uid}}</p>
-            <p>興味ある事：{{user.interests.join(", ")}}</p>
+            <p>興味ある事：
+              <span
+                v-for="word in user.interests"
+                :key="word"
+              >
+              <router-link
+                :to="'/search-user?q=' + word"
+                style="margin-right: 0.5rem">
+                {{word}}
+              </router-link>
+              </span>
+            </p>
           </div>
         </div>
       </li>
