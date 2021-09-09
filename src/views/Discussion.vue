@@ -76,7 +76,7 @@ export default {
         let uids = doc.data().users;
         let uCol = db.collection("users")
         let promises = [];
-        for (let uid of uids) {
+        for (let uid of uids.filter((el) => el !== "")) {
           promises.push(uCol.doc(uid).get())
         }
         Promise.all(promises).then((docs) => {
