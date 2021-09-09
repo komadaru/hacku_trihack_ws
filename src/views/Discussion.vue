@@ -21,15 +21,19 @@
     </span>
   </p>
   <p>{{ description }}</p>
-  <Board ref="board" :disId="disId" :idUsers="idUsers" v-if="boardOk"></Board>
+  <Board ref="board" 
+    :disId="disId"
+    :idUsers="idUsers"
+    :userRoles="userRoles"
+    v-if="boardOk"></Board>
   <PostForm ref="form" :disId="disId" @onSubmit="reloadPosts"
     @onClosed="loadDiscuss"
     v-if="!closed"></PostForm>
   </div>
   <p class="invalid-message" v-else>議論 (id:{{ disId }})は存在しないか、閲覧する権限がありません。</p>
-  <div class="conclusion" v-if="closed">
-    <h2>結論:</h2>
-    <p>{{ conclusion }}</p>
+  <div class="conclusion card mb-3" v-if="closed">
+    <h2 class="card-title card-header bg-success text-white">結論</h2>
+    <p class="card-body">{{ conclusion }}</p>
   </div>
 </div>
 </template>
@@ -57,7 +61,8 @@ export default {
       closed: false,
       type: "",
       isValid: true,
-      idUsers: {},
+      idUsers: new Map(),
+      userRoles: new Map(),
       boardOk: false,
       conclusion: ""
     }
@@ -76,9 +81,21 @@ export default {
         }
         Promise.all(promises).then((docs) => {
           for (let d of docs) {
-            this.idUsers[d.id] = d.data();
+            this.idUsers.set(d.id, d.data());
           }
         })
+      })
+    },
+    setUserRoles() {
+      let db = firebase.firestore();
+      let disRef = db.collection("discussions").doc(this.disId);
+      return disRef.get().then((doc) => {
+        if ("userRoles" in doc.data()) {
+          let dbMap = doc.data().userRoles;
+          for (let user of dbMap) {
+            this.userRoles.set(user.uid, user.role)
+          }
+        }
       })
     },
     loadDiscuss() {
@@ -116,7 +133,9 @@ export default {
         console.log(user.uid + "でログイン中")
         this.loadDiscuss().then(() => {
           this.setIdUsers().then(() => {
-            this.boardOk = true;
+            this.setUserRoles().then(() => {
+              this.boardOk = true;
+            });
           });
         });
       } else {

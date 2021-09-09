@@ -16,7 +16,8 @@ import Post from './Post.vue'
 export default {
     props: {
         disId: String,
-        idUsers: Object
+        idUsers: Object, // Map Object
+        userRoles: Object
     },
     data() {
         return {
@@ -35,16 +36,28 @@ export default {
             let posts = [];
             postsRef.get().then((snapshot) => {
                 for (let doc of snapshot.docs) {
+                    // 投稿のデータを取得
                     let post = doc.data();
-                    post.commenterName = this.idUsers[post.commenter].name;
-                    post.id = doc.id; //idをセット
+                    //idをセット
+                    post.id = doc.id;
+                    // commenterはユーザーを表すオブジェクトに変換
+                    let uid = post.commenter
+                    post.commenter = {...this.idUsers.get(post.commenter)};
+                    post.commenter.uid = uid;
+                    // userRolesが与えられていればrolesを追加
+                    if (typeof this.userRoles !== "undefined") {
+                        if (this.userRoles.has(post.commenter.uid)) {
+                            post.commenter.role
+                                = this.userRoles.get(post.commenter.uid)
+                        }
+                    }
                     post.replys = []; //返信の配列作成
                     post.time = post.time.toDate(); //日付をDate型に変更
-                    if (typeof post.vote !== "undefined") {
+                    if ("vote" in post) {
                         // 投票の日付をDate型に変更
                         post.vote.timelimit = post.vote.timelimit.toDate();
                     }
-                    if (typeof post.ideaEvent !== "undefined") {
+                    if ("ideaEvent" in post) {
                         // アイデア募集の日付をDate型に変更
                         post.ideaEvent.timelimit = post.ideaEvent.timelimit.toDate();
                     }
@@ -55,11 +68,11 @@ export default {
         },
         makeTree(posts) {
             for (let post of posts){
-                if (typeof post.parentId !== "undefined") {
+                if ("parentId" in post) {
                     post.parent = posts.find((p) => {
                         return p.id == post.parentId;
                     });
-                    if (typeof post.parent !== "undefined") {
+                    if ("parent" in post) {
                         post.parent.replys.push(post);
                     } else {
                         delete post.parentId;
@@ -67,7 +80,7 @@ export default {
                 }
             }
             posts = posts.filter((post) => {
-                return typeof post.parentId === "undefined"
+                return !("parentId" in post);
             })
             return posts
         },

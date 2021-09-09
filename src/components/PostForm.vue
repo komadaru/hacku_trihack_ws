@@ -10,7 +10,7 @@
       </label>
       </div>
       <!--アイデア出しの時-->
-      <div class="mb-3 col" v-if="isIdea()">
+      <div class="mb-3 col" v-else-if="isIdea()">
         <p class="form-text">アイデア出し</p>
         <p class="form-text">1行1アイデア。空行は無視されます</p>
       </div>
@@ -18,7 +18,11 @@
       <div class="mb-3 col" v-else>
       <label class="form-label">タイプ：
         <select v-model="type" class="form-select" required>
-          <option :value="key" v-for="(t,key) in types()" :key="key">{{key}}</option>
+          <option 
+            :value="key" 
+            v-for="[key, value] in types()" 
+            :key="key">
+          {{value}}</option>
         </select>
       </label>
       </div>
@@ -45,12 +49,12 @@
     </div>
     <!--投票の作成とアイデア募集の作成-->
     <VoteForm 
-      v-if="type==='投票'"
+      v-if="type==='vote'"
       v-model:choices="creatingVote.choices"
       v-model:nChoicesPerPerson="creatingVote.nChoicesPerPerson"
       v-model:timelimit="creatingVote.timelimit"></VoteForm>
     <IdeaForm
-      v-else-if="type==='アイデア募集'"
+      v-else-if="type==='ideaEvent'"
       v-model:timelimit="ideaEvent.timelimit"></IdeaForm>
     <!--コメントの中身-->
     <div class="mb-3 row">
@@ -91,7 +95,7 @@ export default {
   },
   data(){
     return{
-      type: "コメント",
+      type: "comment-type",
       name: "",
       commenter: "",
       content: "",
@@ -103,7 +107,8 @@ export default {
       },
       ideaEvent: {
         timelimit: moment().format("YYYY-MM-DD HH:mm")
-      }
+      },
+      myRole: void 0
     }
   },
   methods: {
@@ -118,7 +123,7 @@ export default {
       if (this.isReply()) {
         post.parentId = this.replyingPost.id
       }
-      if (this.type === "投票") {
+      if (this.type === "vote") {
         post.vote = this.creatingVote;
         // Timestamp型に変換
         post.vote.timelimit
@@ -129,7 +134,7 @@ export default {
         post.vote.choices = post.vote.choices.filter(el => {
           return el != "";
         });
-      } else if (this.type === "アイデア募集") {
+      } else if (this.type === "ideaEvent") {
         post.ideaEvent = this.ideaEvent;
         // Timestamp型に変換
         post.ideaEvent.timelimit
@@ -148,7 +153,7 @@ export default {
       col.add(postData)
       .then((docRef) => {
         console.log("コメントを送信しました", docRef.id)
-        if (postData.type === "クローズ") {
+        if (postData.type === "close") {
           this.closeDiscuss(postData);
         }
       })
@@ -171,20 +176,45 @@ export default {
           this.commenter = user.uid
           firebase.firestore().collection("users")
             .doc(this.commenter).get()
-            .then((doc) => this.name = doc.data().name)
+            .then((doc) => {
+              this.name = doc.data().name
+              this.setMyRole()
+              })
             .catch(() => this.name = "ユーザー名が取得できません")
         } else {
           console.error("ログインしていません")
         }
       });
     },
+    setMyRole(){
+      let db = firebase.firestore();
+      let disRef = db.collection("discussions").doc(this.disId);
+      return disRef.get().then((doc) => {
+        if ("userRoles" in doc.data()) {
+          let dbMap = doc.data().userRoles;
+          this.myRole = dbMap.find((user) => 
+            user.uid === this.commenter).role
+        }
+      })
+    },
     types() {
-      let ret = {...typeMap}
+      let ret = new Map(typeMap)
       if (this.isReply()) {
         // 返信ではクローズと投票とアイデア募集は選べない
-        delete ret["クローズ"]
-        delete ret["投票"]
-        delete ret["アイデア募集"]
+        let invalids = ["close", "vote", "ideaEvent"]
+        invalids.forEach((invalid) => ret.delete(invalid))
+      }
+      if (typeof this.myRole !== "undefined") {
+        // 自分の役割があれば、賛成と反対系、アイデア募集、投票を消し、役割を追加する
+        let invalids = ["agree", "disagree",
+                               "conditional-agree",
+                               "conditional-disagree",
+                               "ideaEvent"]
+        if (this.myRole !== "審判") {invalids.push("vote")}
+        invalids.forEach((invalid) => {ret.delete(invalid)})
+        let temp = new Map(ret)
+        ret = new Map([["role", this.myRole]])
+        temp.forEach((value, key) => ret.set(key, value))
       }
       return ret
     },
@@ -192,13 +222,13 @@ export default {
       return typeof this.replyingPost !== "undefined";
     },
     isVote() {
-      return this.isReply() && typeof this.replyingPost.vote !== "undefined";
+      return this.isReply() && "vote" in this.replyingPost;
     },
     isIdea() {
-      return this.isReply() && typeof this.replyingPost.ideaEvent !== "undefined";
+      return this.isReply() && "ideaEvent" in this.replyingPost;
     },
     clear() {
-      this.type = "コメント";
+      this.type = "comment-type";
       this.content = "";
       this.voteChoice = void 0;
       this.creatingVote = {
