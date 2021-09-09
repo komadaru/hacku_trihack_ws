@@ -24,9 +24,9 @@
             </div>
         </div>
         <div id="contact" class="tab-pane" role="tabpanel" aria-labelledby="discussion-tab">
-            <div class="col" v-for="discussion in disList" :key="discussion">
-                <router-link class='link' :to="{ path: '/discussion/' + discussion}">
-                    <h4><strong>{{discussion}}</strong></h4>
+            <div class="col" v-for="(discussion, index) in disInfo" :key="discussion">
+                <router-link class='link' :to="{ path: '/discussion/' +  disList[index]}">
+                    <h4><strong>{{discussion.name}}</strong></h4>
                 </router-link>
             </div>
             <div class="br"></div>
@@ -92,6 +92,15 @@ export default {
     this.com_id = this.comIdDict[this.com.name]
 
     this.disList = this.com.discussions
+    
+    const discussions = firebase.firestore().collection("discussions")
+    const promises = this.disList.map((disId) => {
+      return discussions.doc(disId).get();
+    });
+    const disData = await Promise.all(promises)
+    disData.forEach(doc => {
+      this.disInfo.push(doc.data())
+    })
   },
   data: () => ({
     com_index: '',
