@@ -33,55 +33,7 @@
                     </label>
                     </div>
                     </div>
-                    <label class="discussiontype">
-                        <input type="radio" id="type" name="discussiontype" value="アイデア募集型" v-model="formdata.type">アイデア募集型
-                    </label>
-                    <label class="discussiontype">
-                        <input type="radio" id="type" name="discussiontype" value="複数選択型" v-model="formdata.type">複数選択型
-                    </label>
                     
-                    <li>クローズ条件</li>
-                    <label class="closeconditions">
-                        <input type="radio" name="closeauto" value="manual-close" v-model="formdata.closeauto">手動クローズ
-                    </label>
-                    <label class="closeconditions">
-                        <input type="radio" name="closeauto" value="auto-close" v-model="formdata.closeauto">自動クローズ
-                    </label>
-                    <div v-show="formdata.closeauto==='auto-close'">
-                    <label class="closeconditions">
-                        <input type="checkbox" name="closeconditions" value="期限を設定" v-model="showCal">期限を設定
-                    <div v-show="showCal">
-                        <flat-pickr placeholder="日時を入力" v-model="formdata.timelimit" :config="config"></flat-pickr>
-                    </div>
-                    </label>
-                    <label class="closeconditions">
-                    <div v-show="formdata.type==='アイデア募集型'">
-                        <input type="checkbox" id="clc" name="closeconditions" value="上限アイデア数を設定" v-model="showIdeaAmo">上限アイデア数を設定
-                        <div v-show="showIdeaAmo">
-                            <input type="number" step="10" min="0" v-model="formdata.ideaamo">
-                        </div>
-                    </div>
-                    </label>
-                    <label class="closeconditions">
-                        <input type="checkbox" id="clc" name="closeconditions" value="上限コメント数を設定" v-model="showComAmo">上限コメント数を設定
-                        <div v-show="showComAmo">
-                            <input type="number" step="10" min="0" v-model="formdata.comamo">
-                        </div>
-                    </label>
-                    </div>
-                    
-                    <li>公開/非公開設定</li>
-                    <label class="scope">
-                        <input type="radio" id="oc" name="scope" value="公開" v-model="formdata.scope">公開
-                    </label>
-                    <label class="scope">
-                        <input type="radio" id="oc" name="scope" value="非公開" v-model="formdata.scope">非公開
-                    </label>
-                    <label class="scope">
-                    <div v-show="formdata.scope === '非公開'">
-                        <input class="dpass" type="password" v-model="formdata.dpass" placeholder="パスワードを入力">
-                    </div>
-                    </label>
                     <label class="make">
                     <input type="submit" value="作成">
                     </label>
@@ -96,9 +48,6 @@
 </template>
 
 <script>
-    // Import outside library from main.js
-    import flatPickr from 'vue-flatpickr-component';
-
     import firebase from "firebase/app";
 
     export default {
@@ -136,44 +85,14 @@
                 idList: {
 
                 },
-                date: null,
-                ideaAmount: 0,
-                comAmount: 0,
-                // For flatPickr: flatPickrの要素設定
-                config: {
-                    enableTime: true,
-                    dateFormat: "Y-m-d H:i",
-                    minDate: null,
-                },
-                showCal: false,
-                showIdeaAmo: false,
-                showComAmo: false,
 
                 redirect: "/",
                 formdata: {
-                    name: "", description: "", type: "", closeauto: true,
-                    timelimit: "", ideaamo: "",
-                    comamo: "", scope: "", dpass: "", roles: [], 
-
+                    name: "", description: "", type: "", roles: [],
                 }
             }
         },
-        components: {
-            flatPickr
-        },
-        // For flatPickr: 現在日時を継続的に更新
-        mounted: function() {
-            this.updateTime();
-            setInterval(this.updateTime, 1000);
-        },
         methods: {
-            // For flatPickr: 現在日時の1分後を取得し、flatPickerの要素minDateに代入
-            updateTime() {
-                let currentdate = new Date()
-                this.config.minDate = currentdate.getFullYear() + '-' + (currentdate.getMonth() + 1) + '-' +
-                currentdate.getDate() + ' ' + currentdate.getHours() + ':' + (currentdate.getMinutes() + 1)
-            },
-
             submit() {
                 let data = this.formdata
                 const room = 'discussions'
@@ -198,10 +117,10 @@
                                     discussions: firebase.firestore.FieldValue.arrayUnion(value.id)
                                 });
                                 firebase.firestore().collection('discussions').doc(value.id).collection('posts').add({
-                                    commenter: "bot",
-                                    content: "議論が開始されました！さっそく話し合いましょう！",
+                                    commenter: user.uid,
+                                    content: "議論を開始しました。",
                                     time: firebase.firestore.Timestamp.now(),
-                                    type: "コメント"
+                                    type: "comment-type"
                                 });
                                 console.log("Data saved successfully!")
                                 this.$router.push("/discussion/" + value.id)
