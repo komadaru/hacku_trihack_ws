@@ -1,7 +1,23 @@
 <template>
-    <h1>ユーザー検索</h1>
+  <div class="container-sm">
+    <h1>興味のあることでユーザーを検索してみよう！</h1>
     <form @submit.prevent="onSubmit">
-      <input type="text" v-model="word"><input type="submit">
+      <div class="input-group">
+        <input 
+          type="text"
+          v-model="word"
+          class="form-control"
+        >
+        <input
+          type="submit"
+          class="btn btn-primary"
+        >
+        <button 
+          type="button"
+          @click="clear"
+          class="btn btn-danger"
+        >クリア</button>
+      </div>
     </form>
     <ul>
       <li v-for="(user, index) of users" :key="user.uid" class="mb-3">
@@ -20,6 +36,7 @@
       </li>
       <span v-if="users.length == 0">見つかりません</span>
     </ul>
+  </div>
 </template>
 
 <script>
@@ -41,6 +58,7 @@ export default {
         let usersRef = db.collection("users");
         let query = this.$route.query.q;
         if (typeof query === "undefined") {
+          this.users = [];
           return
         }
         let qRef = usersRef
@@ -68,10 +86,16 @@ export default {
         })
       },
       onSubmit() {
-        console.log(this.word)
         this.$router.push('/search-user?q=' + this.word)
           .then(() => this.searchUserByProf())
+      },
+      clear() {
+        this.$router.push('/search-user')
+          .then(() => this.searchUserByProf())
       }
+    },
+    created() {
+      this.searchUserByProf()
     }
 }
 </script>
