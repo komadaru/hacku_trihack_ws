@@ -21,7 +21,6 @@ export default {
   methods:{
       edit:function(){
         let db = firebase.firestore();
-        // let user = firebase.auth().currentUser;
         let userRef = db.collection("users").doc(this.$route.params.userId);
         userRef.update({
             name:this.newname,

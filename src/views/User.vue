@@ -6,10 +6,15 @@
         <div class="info">
             <h1 class="mt-2">{{name}}</h1>
             <p>{{biography}}</p>
-            <p>{{uid}}</p>
+            <p>ID : {{uid}}</p>
             <ul>
               <li v-for = "interest in interests" :key = "interest">{{interest}}</li>
             </ul>
+            <div v-show="uid === id">
+              <router-link :to="{ path:'/user/' + this.$route.params.userId + '/user_edit'}">
+                  <p class="btn btn-primary">編集</p>
+              </router-link>
+            </div>
         </div>
     </div>
 </template>
@@ -25,7 +30,8 @@ export default {
       name:"",
       biography:"",
       uid:"",
-      interests:[],
+      interests:"",
+      id:""
     }
   },
   created(){
@@ -44,6 +50,11 @@ export default {
     }).catch((error) => {
     console.log("Error getting document:", error);
     });
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        this.id = user.uid
+      }
+    })
   },
 }
 </script>
