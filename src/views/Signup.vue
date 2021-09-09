@@ -24,13 +24,9 @@ export default {
     },
     methods: {
         signup() {
-            firebase.auth().onAuthStateChanged((user) => {
-                if (user) {
-                    this.id = user.uid;
-                }
-            })
             firebase.auth().createUserWithEmailAndPassword(this.email, this.password)
                 .then(user => {
+                    this.id = user.uid
                     alert('Created accout: ', user.email)
                     this.createdoc();
                     this.$router.push('/')
