@@ -1,15 +1,20 @@
 <template>
     <h1>ユーザー検索</h1>
-    <form @submit.prevent="searchUserByProf(word)">
+    <form @submit.prevent="onSubmit">
       <input type="text" v-model="word"><input type="submit">
     </form>
     <ul>
-      <li v-for="user of users" :key="user.uid" class="mb-3">
+      <li v-for="(user, index) of users" :key="user.uid" class="mb-3">
         <div class="card">
-          <div class="card-header">名前：{{user.name}}</div>
+          <div class="card-header">
+            No.{{index + 1}} 
+            <router-link :to="'/user/' + user.uid">
+              名前：{{user.name}}
+            </router-link>
+            </div>
           <div class="card-body">
             <p>id：{{user.uid}}</p>
-            <p>興味ある事：{{user.interests}}</p>
+            <p>興味ある事：{{user.interests.join(", ")}}</p>
           </div>
         </div>
       </li>
@@ -31,10 +36,15 @@ export default {
       }
     },
     methods: {
-      searchUserByProf(word) {
+      searchUserByProf() {
         let db = firebase.firestore();
         let usersRef = db.collection("users");
-        let qRef = usersRef.where("name", "==", word)
+        let query = this.$route.query.q;
+        if (typeof query === "undefined") {
+          return
+        }
+        let qRef = usersRef
+          .where("interests", "array-contains", query)
         qRef.get().then((snapShot) => {
           let users = [];
           for (let doc of snapShot.docs) {
@@ -57,13 +67,11 @@ export default {
           this.users = users;
         })
       },
-      test() {
-        firebase.firestore().collection("discussions")
-          .where("community", )
+      onSubmit() {
+        console.log(this.word)
+        this.$router.push('/search-user?q=' + this.word)
+          .then(() => this.searchUserByProf())
       }
-    },
-    created() {
-      this.test()
     }
 }
 </script>
