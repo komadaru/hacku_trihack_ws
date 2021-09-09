@@ -194,6 +194,15 @@
                         }
                         firebase.firestore().collection(room).add(disData)
                             .then((value) => {
+                                firebase.firestore().collection('communities').doc(this.$route.params.cid).update({
+                                    discussions: firebase.firestore.FieldValue.arrayUnion(value.id)
+                                });
+                                firebase.firestore().collection('discussions').doc(value.id).collection('posts').add({
+                                    commenter: "bot",
+                                    content: "議論が開始されました！さっそく話し合いましょう！",
+                                    time: firebase.firestore.Timestamp.now(),
+                                    type: "コメント"
+                                });
                                 console.log("Data saved successfully!")
                                 this.$router.push("/discussion/" + value.id)
                                 })
