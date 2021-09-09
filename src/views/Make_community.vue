@@ -64,7 +64,8 @@ export default {
                     let newCommunity = {
                         name: self.comName,
                         description: self.description,
-                        users: self.addingUids.concat(this.currentUid),
+                        users: self.addingUids.filter(((uid) => uid !== ""))
+                            .concat(this.currentUid),
                         discussions: []
                     };
                     col = db.collection("communities");
@@ -77,7 +78,6 @@ export default {
         }
     },
     created() {
-        //デバッグ用
         firebase.auth().onAuthStateChanged((user) => {
             if (user) {
                 this.currentUid = user.uid;
