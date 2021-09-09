@@ -1,4 +1,5 @@
 <template>
+    <img v-bind:src="require('../assets/dplogo.png')">
     <div class="signup">
         <h2>サインアップ</h2>
         <input type="email" placeholder="Eメールアドレス" v-model="email">
@@ -24,14 +25,10 @@ export default {
     },
     methods: {
         signup() {
-            firebase.auth().onAuthStateChanged((user) => {
-                if (user) {
-                    this.id = user.uid;
-                }
-            })
             firebase.auth().createUserWithEmailAndPassword(this.email, this.password)
-                .then(user => {
-                    alert('Created accout: ', user.email)
+                .then(userCredential => {
+                    this.id = userCredential.user.uid
+                    alert('Created accout: ', userCredential.email)
                     this.createdoc();
                     this.$router.push('/')
                 })
@@ -42,11 +39,13 @@ export default {
         createdoc() {
             let userData = {
                 biography: "プロフィールが書かれていません。",
-                name: this.id
-            }
+                name: this.id,
+                interests: []
+            };
             var db = firebase.firestore();
             db.collection('users').doc(this.id).set(userData)
         },
+
     }
 }
 </script>

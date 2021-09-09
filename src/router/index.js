@@ -3,6 +3,7 @@ import Login from '../views/Login.vue'
 import Signup from '../views/Signup.vue'
 import Make_community from '../views/Make_community.vue'
 import User from '../views/User.vue'
+import User_edit from '../views/User_edit.vue'
 import Community from '../views/Community.vue'
 import Make_discussion from '../views/Make_discussion.vue'
 import Discussion from '../views/Discussion.vue'
@@ -25,6 +26,11 @@ const routes = [
     path: '/user/:userId',
     name: 'User',
     component: User
+  },
+  {
+    path: '/user/:userId/user_edit',
+    name: 'User_edit',
+    component: User_edit
   },
   {
     path: '/make_community',

@@ -1,5 +1,4 @@
 <template>
-
     <h1><strong>{{com["name"]}}</strong></h1>
     <ul id="myTab" class="nav nav-tabs nav-justified mb-3" role="tablist">
         <li class="nav-item" role="presentation">
@@ -25,9 +24,9 @@
             </div>
         </div>
         <div id="contact" class="tab-pane" role="tabpanel" aria-labelledby="discussion-tab">
-            <div class="col" v-for="discussion in disList" :key="discussion">
-                <router-link class='link' :to="{ path: '/discussion/' + discussion}">
-                    <h4><strong>{{discussion}}</strong></h4>
+            <div class="col" v-for="(discussion, index) in disInfo" :key="discussion">
+                <router-link class='link' :to="{ path: '/discussion/' +  disList[index]}">
+                    <h4><strong>{{discussion.name}}</strong></h4>
                 </router-link>
             </div>
             <div class="br"></div>
@@ -66,6 +65,7 @@ export default {
     comData.forEach(doc => {
       this.comList.push(doc.data())
       this.comIdList.push(doc.id)
+      this.comIdDict[doc.data().name] = doc.id
     })
 
     const users = firebase.firestore().collection("users")
@@ -89,10 +89,18 @@ export default {
 
     this.com = this.myComList[this.com_index]
 
-    this.com_id = this.comIdList[this.com_index]
+    this.com_id = this.comIdDict[this.com.name]
 
     this.disList = this.com.discussions
-
+    
+    const discussions = firebase.firestore().collection("discussions")
+    const promises = this.disList.map((disId) => {
+      return discussions.doc(disId).get();
+    });
+    const disData = await Promise.all(promises)
+    disData.forEach(doc => {
+      this.disInfo.push(doc.data())
+    })
   },
   data: () => ({
     com_index: '',
@@ -100,6 +108,9 @@ export default {
     uid: '',
     com: '',
     idList: {
+
+    },
+    comIdDict: {
 
     },
     comList: [
@@ -123,6 +134,9 @@ export default {
     disList: [
 
     ],
+    disInfo: [
+      
+    ]
   })
 }
 </script>
