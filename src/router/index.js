@@ -7,6 +7,7 @@ import Community from '../views/Community.vue'
 import Make_discussion from '../views/Make_discussion.vue'
 import Discussion from '../views/Discussion.vue'
 import ComList from '../views/ComList.vue'
+import SearchUser from "../views/SearchUser.vue"
 
 
 const routes = [
@@ -49,7 +50,12 @@ const routes = [
     path: '/comlist',
     name: 'ComList',
     component: ComList
-  }
+  },
+  {
+    path: '/search-user',
+    name: 'SearchUser',
+    component: SearchUser
+  },
 ]
 
 const router = createRouter({
