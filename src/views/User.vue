@@ -7,8 +7,11 @@
             <h1 class="mt-2">{{name}}</h1>
             <p>{{biography}}</p>
             <p>ID : {{uid}}</p>
+            <ul>
+              <li v-for = "interest in interests" :key = "interest">{{interest}}</li>
+            </ul>
             <div v-show="uid === id">
-              <router-link :to="{ path: ''}">
+              <router-link :to="{ path:'/user/' + this.$route.params.userId + '/user_edit'}">
                   <p class="btn btn-primary">編集</p>
               </router-link>
             </div>
@@ -27,6 +30,7 @@ export default {
       name:"",
       biography:"",
       uid:"",
+      interests:"",
       id:""
     }
   },
@@ -38,6 +42,7 @@ export default {
         this.name = doc.data().name
         this.biography = doc.data().biography
         this.uid=doc.id
+        this.interests=doc.data().interests
     } else {
         // doc.data() will be undefined in this case
         console.log("No such document!");
@@ -45,7 +50,6 @@ export default {
     }).catch((error) => {
     console.log("Error getting document:", error);
     });
-
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         this.id = user.uid
