@@ -9,6 +9,11 @@
               </router-link>
             </li>
             <li class="nav-item">
+              <router-link class="routerLink" :to="{ path: '/search-user'}">
+                <a class="nav-link active">ユーザー検索</a>
+              </router-link>
+            </li>
+            <li class="nav-item">
               <router-link class="routerLink" :to="{ path: '/comlist'}">
                 <a class="nav-link active">コミュニティ一覧</a>
               </router-link>
