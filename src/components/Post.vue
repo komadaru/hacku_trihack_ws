@@ -294,6 +294,10 @@ export default {
     content: "🗳"
   }
 
+  .judge {
+    content: "‍⚖️"
+  }
+
   .close {
     color: green;
   }

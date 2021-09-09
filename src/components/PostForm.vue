@@ -108,7 +108,7 @@ export default {
       ideaEvent: {
         timelimit: moment().format("YYYY-MM-DD HH:mm")
       },
-      myRole: ""
+      myRole: void 0
     }
   },
   methods: {
@@ -201,16 +201,17 @@ export default {
       let ret = new Map(typeMap)
       if (this.isReply()) {
         // 返信ではクローズと投票とアイデア募集は選べない
-        let invalidsIfReply = ["close", "vote", "ideaEvent"]
-        invalidsIfReply.forEach((invalid) => ret.delete(invalid))
+        let invalids = ["close", "vote", "ideaEvent"]
+        invalids.forEach((invalid) => ret.delete(invalid))
       }
       if (typeof this.myRole !== "undefined") {
-        // 自分の役割があれば、賛成と反対系、アイデア募集を消し、役割を追加する
-        let invalidsIfReply = ["agree", "disagree",
+        // 自分の役割があれば、賛成と反対系、アイデア募集、投票を消し、役割を追加する
+        let invalids = ["agree", "disagree",
                                "conditional-agree",
                                "conditional-disagree",
                                "ideaEvent"]
-        invalidsIfReply.forEach((invalid) => {ret.delete(invalid)})
+        if (this.myRole !== "審判") {invalids.push("vote")}
+        invalids.forEach((invalid) => {ret.delete(invalid)})
         let temp = new Map(ret)
         ret = new Map([["role", this.myRole]])
         temp.forEach((value, key) => ret.set(key, value))

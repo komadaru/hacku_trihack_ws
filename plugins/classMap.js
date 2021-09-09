@@ -6,6 +6,8 @@ const classMap = new Map([
     ["反対", "disagree"],
     ["肯定", "agree"],
     ["否定", "disagree"],
+    ["審判", "judge"],
+    ["判定", "judge"]
 ])
 
 export default classMap
