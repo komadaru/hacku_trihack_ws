@@ -42,7 +42,8 @@ export default {
         createdoc() {
             let userData = {
                 biography: "プロフィールが書かれていません。",
-                name: this.id
+                name: this.id,
+                interests: []
             }
             var db = firebase.firestore();
             db.collection('users').doc(this.id).set(userData)
