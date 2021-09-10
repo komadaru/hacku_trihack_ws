@@ -8,7 +8,7 @@
             <p>{{biography}}</p>
             <p>ID : {{uid}}</p>
             <ul>
-              <li v-for = "interest in interests" :key = "interest">{{interest}}</li>
+              <p v-for = "interest in interests" :key = "interest">{{interest}}</p>
             </ul>
             <div v-show="uid === id">
               <router-link :to="{ path:'/user/' + this.$route.params.userId + '/user_edit'}">
