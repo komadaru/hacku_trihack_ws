@@ -1,8 +1,5 @@
 <template>
     <div>
-        <div class="mt-3">
-            <img class = "bd-placeholder-imag rounded-circle" v-bind:src = "img" width="100" height="100">
-        </div>
         <div class="info">
             <h1 class="mt-2">{{name}}</h1>
             <p>{{biography}}</p>
