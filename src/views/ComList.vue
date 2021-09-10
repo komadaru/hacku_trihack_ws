@@ -7,7 +7,7 @@
         </div>
         <div class="card-body">
           <h5 class="card-title"><strong>{{data["description"]}}</strong></h5>
-          <h8 class="card-title">[メンバー]</h8>
+          <h6 class="card-title">[メンバー]</h6>
           <div v-for="member in data.users" :key="member">
             <p class="card-text">{{idList[member]}}</p>
           </div>
