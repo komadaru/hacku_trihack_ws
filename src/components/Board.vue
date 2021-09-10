@@ -17,6 +17,7 @@ import Post from './Post.vue'
 export default {
     props: {
         disId: String,
+        disType: String,
         idUsers: Object, // Map Object
         userRoles: Object
     },
