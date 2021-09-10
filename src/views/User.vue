@@ -7,9 +7,7 @@
             <h1 class="mt-2">{{name}}</h1>
             <p>{{biography}}</p>
             <p>ID : {{uid}}</p>
-            <ul>
-              <p v-for = "interest in interests" :key = "interest">{{interest}}</p>
-            </ul>
+            <p v-for = "interest in interests" :key = "interest">{{interest}}</p>
             <div v-show="uid === id">
               <router-link :to="{ path:'/user/' + this.$route.params.userId + '/user_edit'}">
                   <p class="btn btn-primary">編集</p>
