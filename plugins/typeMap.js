@@ -3,6 +3,7 @@ const typeMap = new Map([
     ["disagree", "反対"],
     ["conditional-agree", "条件付き賛成"],
     ["conditional-disagree", "条件付き反対"],
+    ["counter", "反論"],
     ["report", "報告"],
     ["comment-type", "コメント"],
     ["question", "質問"],

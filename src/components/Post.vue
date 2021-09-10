@@ -277,6 +277,10 @@ export default {
     content: "✖";
   }
 
+  .counter::before {
+    content: "💥";
+  }
+
   .comment-type::before {
     content: "💬"
   }
