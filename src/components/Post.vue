@@ -74,6 +74,7 @@
   <ul class="replys" v-show="showsReply">
     <li v-for="(rPost, index) in post.replys" :key="rPost.id">
       <Post :post="rPost" :disId ="disId"
+        :disType="disType"
         :path="path + '/' + (index + 1)"
         @onFormSubmit="$emit('onFormSubmit')">
       </Post>
@@ -93,6 +94,7 @@ import moment from "moment";
 export default {
   props: {
     disId: String,
+    disType: String,
     post: Object,
     path: String
   },

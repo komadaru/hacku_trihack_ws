@@ -87,6 +87,7 @@ export default {
   props: {
     destPath: String,
     disId: String,
+    disType: String,
     replyingPost: Object
   },
   components: {
@@ -204,8 +205,8 @@ export default {
         let invalids = ["close", "vote", "ideaEvent"]
         invalids.forEach((invalid) => ret.delete(invalid))
       }
-      if (typeof this.myRole !== "undefined") {
-        // 自分の役割があれば、賛成と反対系、アイデア募集、投票を消し、役割を追加する
+      if (this.disType === "ディベート型") {
+        // ディベート型ならば、賛成と反対系、アイデア募集、投票を消し、役割を追加する
         let invalids = ["agree", "disagree",
                                "conditional-agree",
                                "conditional-disagree",

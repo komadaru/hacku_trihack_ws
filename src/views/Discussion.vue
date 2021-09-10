@@ -25,8 +25,12 @@
     :disId="disId"
     :idUsers="idUsers"
     :userRoles="userRoles"
+    :disType="type"
     v-if="boardOk"></Board>
-  <PostForm ref="form" :disId="disId" @onSubmit="reloadPosts"
+  <PostForm ref="form"
+    :disId="disId"
+    :disType="type"
+    @onSubmit="reloadPosts"
     @onClosed="loadDiscuss"
     v-if="!closed"></PostForm>
   </div>
