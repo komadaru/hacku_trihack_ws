@@ -101,6 +101,7 @@ export default {
           .then(() => this.searchUserByProf())
       },
       clear() {
+        this.word = "";
         this.$router.push('/search-user')
           .then(() => this.searchUserByProf())
       }
