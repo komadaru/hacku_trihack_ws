@@ -121,7 +121,7 @@ export default {
       return "voteChoice" in this.post;
     },
     isIdea() {
-      return this.isReply() && this.post.parent.type !== "アイデア出し";
+      return this.isReply() && this.post.parent.type === "アイデア出し";
     },
     isBgColored() {
       return this.post.type==='vote' || this.isVoteChoice()
