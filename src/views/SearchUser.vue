@@ -64,14 +64,13 @@ export default {
       }
     },
     methods: {
-      searchUserByProf() {
-        let db = firebase.firestore();
-        let usersRef = db.collection("users");
-        let query = this.$route.query.q;
+      searchUserByProf(query) {
         if (typeof query === "undefined") {
           this.users = [];
           return
         }
+        let db = firebase.firestore();
+        let usersRef = db.collection("users");
         let qRef = usersRef
           .where("interests", "array-contains", query)
         qRef.get().then((snapShot) => {
@@ -98,16 +97,19 @@ export default {
       },
       onSubmit() {
         this.$router.push('/search-user?q=' + this.word)
-          .then(() => this.searchUserByProf())
       },
       clear() {
         this.word = "";
         this.$router.push('/search-user')
-          .then(() => this.searchUserByProf())
       }
     },
     created() {
-      this.searchUserByProf()
+      this.searchUserByProf(this.$route.query.q)
+    },
+    // eslint-disable-next-line no-unused-vars
+    beforeRouteUpdate(to, from, next) {
+      this.searchUserByProf(to.query.q);
+      next();
     }
 }
 </script>
