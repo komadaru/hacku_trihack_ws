@@ -11,7 +11,11 @@
         <div class="int">
             <ul>
               <h2>興味のあること</h2>
-              <li v-for = "interest in interests" :key = "interest">{{interest}}</li>
+              <router-link :to="{path:'/search-user', query: { q: interest}}">
+                <li v-for = "interest in interests" :key = "interest">
+                  {{interest}}
+                </li>
+              </router-link>
             </ul>
         </div>
         <div v-show="uid === id">
@@ -69,14 +73,14 @@ export default {
   position: relative;
   background: #fafafa;
 }
-ul {
+.int ul {
   box-shadow :0px 0px 3px silver;
   border: solid 1px whitesmoke;
   padding: 0.5em 1em 0.5em 2.3em;
   position: relative;
   background: #fafafa;
 }
-ul li {
+.int ul li {
   line-height: 1.5;
   padding: 0.5em 0;
   list-style-type: none!important;
