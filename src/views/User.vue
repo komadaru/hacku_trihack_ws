@@ -1,15 +1,23 @@
 <template>
     <div>
         <div class="info">
-            <h1 class="mt-2">{{name}}</h1>
-            <p>{{biography}}</p>
+            <h1>{{name}}</h1>
             <p>ID : {{uid}}</p>
-            <p v-for = "interest in interests" :key = "interest">{{interest}}</p>
-            <div v-show="uid === id">
-              <router-link :to="{ path:'/user/' + this.$route.params.userId + '/user_edit'}">
-                  <p class="btn btn-primary">編集</p>
-              </router-link>
-            </div>
+        </div>
+        <div class="bio">
+            <h2>自己紹介</h2>
+            <p>{{biography}}</p>
+        </div>
+        <div class="int">
+            <ul>
+              <h2>興味のあること</h2>
+              <li v-for = "interest in interests" :key = "interest">{{interest}}</li>
+            </ul>
+        </div>
+        <div v-show="uid === id">
+          <router-link :to="{ path:'/user/' + this.$route.params.userId + '/user_edit'}">
+              <p class="btn btn-primary">編集</p>
+          </router-link>
         </div>
     </div>
 </template>
@@ -53,3 +61,24 @@ export default {
   },
 }
 </script>
+<style>
+.bio {
+  box-shadow :0px 0px 3px silver;
+  border: solid 1px whitesmoke;
+  padding: 0.5em 1em 0.5em 2.3em;
+  position: relative;
+  background: #fafafa;
+}
+ul {
+  box-shadow :0px 0px 3px silver;
+  border: solid 1px whitesmoke;
+  padding: 0.5em 1em 0.5em 2.3em;
+  position: relative;
+  background: #fafafa;
+}
+ul li {
+  line-height: 1.5;
+  padding: 0.5em 0;
+  list-style-type: none!important;
+}
+</style>
